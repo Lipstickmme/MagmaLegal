@@ -1,15 +1,11 @@
 @import "tailwindcss" source(none);
 @source "../src";
-@import "tw-animate-css";
-
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --font-display: "Playfair Display", Georgia, serif;
+  --radius-sm: calc(var(--radius) - 1px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --font-display: "Spectral", Georgia, "Times New Roman", serif;
   --font-sans: "Jost", system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -34,31 +30,35 @@
 }
 
 :root {
-  --radius: 0.125rem;
+  /* Square, not rounded: the wordmark is cut from straight lines and a soft
+     corner anywhere near it looks like a different firm's logo. */
+  --radius: 0rem;
 
-  /* White and grey ground, coffee brown accent. Two coffees: --accent is for
-     light surfaces, --accent-ink for the dark bands — a single mid-brown
-     cannot clear 4.5:1 against both white and near-black. */
-  --background: oklch(0.988 0.002 95); /* #fbfbfa */
-  --foreground: oklch(0.24 0.01 60); /* #231e1b  15.9:1 on background */
+  /* Black, paper white and the mark's crimson — nothing else. Two reds, as the
+     logo itself has: the pans are a gradient from a deep crimson to an almost
+     signal red, and one flat tone cannot clear 4.5:1 against both paper and
+     near-black. `--accent` is the deep end, for pale surfaces; `--accent-ink`
+     the bright end, for the dark bands. Measured ratios are in the comments. */
+  --background: oklch(0.985 0.001 106); /* #fafaf9 paper */
+  --foreground: oklch(0.179 0.004 286); /* #111113  18.1:1 on paper */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.24 0.01 60);
-  --primary: oklch(0.3 0.032 52); /* #3b291f  dark coffee */
-  --primary-foreground: oklch(0.985 0.004 90);
-  --secondary: oklch(0.958 0.004 85); /* #f2f1ee  light grey */
-  --secondary-foreground: oklch(0.24 0.01 60);
-  --muted: oklch(0.958 0.004 85);
-  --muted-foreground: oklch(0.505 0.012 58); /* #6a635e  5.7:1 */
-  --accent: oklch(0.52 0.072 55); /* #895e40  5.4:1 on background */
-  --accent-foreground: oklch(0.985 0.004 90);
-  --accent-ink: oklch(0.74 0.062 58); /* #c9a284  7.0:1 on ink */
-  --ink: oklch(0.245 0.018 52); /* #281e19  warm near-black */
-  --ink-foreground: oklch(0.955 0.004 85);
-  --destructive: oklch(0.51 0.17 27);
-  --destructive-foreground: oklch(0.985 0.004 92);
-  --border: oklch(0.9 0.005 80); /* #e0deda */
-  --input: oklch(0.9 0.005 80);
-  --ring: oklch(0.52 0.072 55);
+  --card-foreground: oklch(0.179 0.004 286);
+  --primary: oklch(0.174 0.004 286); /* #101012  the wordmark's black */
+  --primary-foreground: oklch(0.985 0 0); /* 18.2:1 on primary */
+  --secondary: oklch(0.961 0.003 106); /* #f2f2f0 */
+  --secondary-foreground: oklch(0.179 0.004 286);
+  --muted: oklch(0.961 0.003 106);
+  --muted-foreground: oklch(0.526 0.006 286); /* #6a6a6e  5.2:1 on paper */
+  --accent: oklch(0.511 0.207 26); /* #c1001b  6.1:1 on paper, 6.4:1 on card */
+  --accent-foreground: oklch(0.985 0 0); /* 6.4:1 on accent */
+  --accent-ink: oklch(0.636 0.25 26.6); /* #ff1a28  5.1:1 on ink */
+  --ink: oklch(0.146 0.004 286); /* #0a0a0c  the logo's ground */
+  --ink-foreground: oklch(0.967 0.001 106); /* 18.0:1 on ink */
+  --destructive: oklch(0.501 0.178 29);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.915 0.004 106); /* #e3e3e0 */
+  --input: oklch(0.915 0.004 106);
+  --ring: oklch(0.511 0.207 26);
 }
 
 @layer base {
@@ -81,17 +81,22 @@
   }
 }
 
-/* Vertical drafting grid used across sections (like architectural plan lines) */
-@utility plan-grid {
+/* ---------------------------------------------------------------------------
+   Grounds
+   The mark is a set of scales over a fluted pillar. Both motifs reduce to
+   vertical hairlines, which is all these two backdrops are: seven columns,
+   faint enough to read as texture rather than as a table.
+--------------------------------------------------------------------------- */
+@utility rule-grid {
   background-image: repeating-linear-gradient(
     to right,
-    color-mix(in oklab, var(--foreground) 8%, transparent) 0 1px,
+    color-mix(in oklab, var(--foreground) 7%, transparent) 0 1px,
     transparent 1px calc(100% / 7)
   );
   background-size: calc(100% / 7) 100%;
 }
 
-@utility plan-grid-dark {
+@utility rule-grid-dark {
   background-image: repeating-linear-gradient(
     to right,
     color-mix(in oklab, var(--ink-foreground) 8%, transparent) 0 1px,
@@ -100,11 +105,38 @@
   background-size: calc(100% / 7) 100%;
 }
 
+/* The hero has no photograph to carry it, so the ground does the work: two
+   wide crimson washes, well under the lockup, that keep the black from
+   reading as a flat rectangle. Weak on purpose — at any more than this the
+   white of the mark starts to look tinted. */
+@utility hero-glow {
+  background:
+    radial-gradient(
+      ellipse 62% 48% at 50% 8%,
+      color-mix(in oklab, var(--accent) 24%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      ellipse 90% 60% at 50% 112%,
+      color-mix(in oklab, var(--accent) 16%, transparent),
+      transparent 70%
+    );
+}
+
+/* ---------------------------------------------------------------------------
+   Type details
+--------------------------------------------------------------------------- */
 @utility eyebrow {
   font-size: 0.6875rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   font-weight: 500;
+}
+
+/* The wordmark's own tracking, for the one line that sits directly under it. */
+@utility wordmark-tracking {
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
 }
 
 @utility link-underline {
@@ -118,7 +150,7 @@
     width: 100%;
     transform: scaleX(0);
     transform-origin: right;
-    background-color: var(--accent);
+    background-color: currentColor;
     transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
   &:hover::after {
@@ -127,9 +159,14 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   Motion
+   Everything settles rather than slides. Small distances, long easing: a law
+   firm's pages should not look like they are being dealt onto the table.
+--------------------------------------------------------------------------- */
 @utility reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(24px);
   transition:
     opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
@@ -140,17 +177,73 @@
   transform: none;
 }
 
-@keyframes kenburns {
-  from {
-    transform: scale(1.06);
-  }
-  to {
-    transform: scale(1.16);
+/* Headline words arrive in sequence. Distance stays small so a long headline
+   never looks like it is assembling itself. */
+@utility word-rise {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.45em);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@utility word-rise-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Artwork that settles into its frame instead of appearing in it. */
+@utility frame-reveal {
+  clip-path: inset(0 0 8% 0);
+  transform: scale(1.03);
+  opacity: 0;
+  transition:
+    clip-path 1100ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1400ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 700ms ease-out;
+}
+
+@utility frame-reveal-in {
+  clip-path: inset(0 0 0 0);
+  transform: none;
+  opacity: 1;
+}
+
+/* A crimson rule that draws itself under a section label as it arrives. */
+@utility draw-rule {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.65rem;
+    height: 1px;
+    width: 2.25rem;
+    transform: scaleX(0);
+    transform-origin: left;
+    background-color: var(--accent);
+    transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 200ms;
   }
 }
 
-@utility kenburns {
-  animation: kenburns 14s ease-out forwards;
+@utility draw-rule-in {
+  &::after {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility fade-in {
+  animation: fade-in 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes marquee-x {
@@ -163,42 +256,21 @@
 }
 
 @utility marquee-track {
-  animation: marquee-x 28s linear infinite;
-}
-
-/* ---------------------------------------------------------------------------
-   Hero shutter
-   The hero already reads as a drafting grid of seven vertical lines. The slide
-   change rides that grid: each slat wipes down in turn, so the image arrives
-   like a shutter opening rather than a crossfade.
---------------------------------------------------------------------------- */
-@utility shutter-slat {
-  clip-path: inset(0 0 100% 0);
-  transition: clip-path 900ms cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: clip-path;
-}
-
-@utility shutter-slat-open {
-  clip-path: inset(0 0 0 0);
-}
-
-/* A hairline between slats keeps the shutter legible once it is open. */
-@utility shutter-seam {
-  box-shadow: inset -1px 0 0 color-mix(in oklab, var(--ink-foreground) 14%, transparent);
+  animation: marquee-x 34s linear infinite;
 }
 
 /* ---------------------------------------------------------------------------
    Cards
-   A small lift and a coffee rule that draws itself. Subtle on purpose: the
-   photography should move, not the furniture around it.
+   A small lift and a crimson rule that draws itself. Subtle on purpose: the
+   type should move, not the furniture around it.
 --------------------------------------------------------------------------- */
 @utility card-lift {
   transition:
     transform 600ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 600ms cubic-bezier(0.22, 1, 0.36, 1);
   &:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 18px 40px -24px color-mix(in oklab, var(--foreground) 45%, transparent);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px -26px color-mix(in oklab, var(--foreground) 50%, transparent);
   }
 }
 
@@ -224,194 +296,27 @@
   }
 }
 
-/* Respect a reduced-motion preference: keep the state changes, drop the travel. */
+/* Keep every state change, drop the travel. */
 @media (prefers-reduced-motion: reduce) {
-  .shutter-slat,
-  .shutter-slat-open {
+  .reveal,
+  .word-rise,
+  .frame-reveal,
+  .draw-rule::after,
+  .link-underline::after {
     transition-duration: 1ms !important;
+  }
+  .word-rise,
+  .frame-reveal {
+    transform: none !important;
+    clip-path: none !important;
   }
   .card-lift:hover {
     transform: none;
   }
-  .kenburns {
+  .marquee-track {
     animation: none;
   }
-}
-
-/* ---------------------------------------------------------------------------
-   Scrims
-   Weighted where the text sits rather than flat across the photograph, so the
-   buildings read at close to full contrast and the headline still clears 4.5:1.
---------------------------------------------------------------------------- */
-@utility hero-scrim {
-  /* The landing hero carries centred white text over whatever photograph is in
-     the carousel, including bright sky. Measured across all four slides, the
-     11px kicker and button label were landing at 2.0–3.9:1; these layers lift
-     them past 4.5:1 on every slide.
-
-     Layered rather than flat so the building still shows: the base wash is
-     light and the ellipse concentrates density on the text block only. The
-     flat wash is last because in the `background` shorthand a bare colour is
-     only valid as the final layer — anywhere else the whole declaration is
-     dropped. */
-  background:
-    /* Behind the headline block — composites with the base wash to roughly the
-       80% that page-hero-scrim gives the other pages at their text edge. */
-    radial-gradient(
-      ellipse 78% 70% at 50% 44%,
-      color-mix(in oklab, var(--ink) 68%, transparent),
-      transparent 78%
-    ),
-    /* Under the header, which is transparent over the hero. */
-      linear-gradient(to bottom, color-mix(in oklab, var(--ink) 58%, transparent), transparent 20%),
-    /* Under the slide counter and arrows. */
-      linear-gradient(to top, color-mix(in oklab, var(--ink) 52%, transparent), transparent 34%),
-    /* Base wash across the whole frame. */ color-mix(in oklab, var(--ink) 40%, transparent);
-}
-
-@utility page-hero-scrim {
-  background:
-    linear-gradient(
-      to right,
-      color-mix(in oklab, var(--ink) 80%, transparent) 0%,
-      color-mix(in oklab, var(--ink) 42%, transparent) 46%,
-      transparent 82%
-    ),
-    linear-gradient(to top, color-mix(in oklab, var(--ink) 40%, transparent), transparent 58%);
-}
-
-/* ---------------------------------------------------------------------------
-   Text motion
-   Headlines and paragraphs settle rather than slide. Small distances, long
-   easing: at these sizes anything more reads as a slideshow.
---------------------------------------------------------------------------- */
-@utility rise {
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@utility rise-in {
-  opacity: 1;
-  transform: none;
-}
-
-/* A rule that draws itself under a section label as it arrives. */
-@utility draw-rule {
-  position: relative;
-  &::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -0.65rem;
-    height: 1px;
-    width: 2.25rem;
-    transform: scaleX(0);
-    transform-origin: left;
-    background-color: var(--accent);
-    transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 200ms;
-  }
-}
-
-@utility draw-rule-in {
-  &::after {
-    transform: scaleX(1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .rise,
-  .draw-rule::after {
-    transition-duration: 1ms !important;
-  }
-}
-
-/* ---------------------------------------------------------------------------
-   Page-level motion
-   Restrained on purpose. Photography and type do the work; the movement only
-   has to make arrival feel considered rather than abrupt.
---------------------------------------------------------------------------- */
-
-/* Headline words arrive in sequence. Distance stays small so long headlines
-   never look like they are assembling themselves. */
-@utility word-rise {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.45em);
-  transition:
-    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@utility word-rise-in {
-  opacity: 1;
-  transform: none;
-}
-
-/* An image that settles into its frame instead of appearing in it. */
-@utility frame-reveal {
-  clip-path: inset(0 0 8% 0);
-  transform: scale(1.04);
-  opacity: 0;
-  transition:
-    clip-path 1100ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 1400ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 700ms ease-out;
-}
-
-@utility frame-reveal-in {
-  clip-path: inset(0 0 0 0);
-  transform: none;
-  opacity: 1;
-}
-
-/* Counting figures and section rules share the same settle. */
-@utility fade-up {
-  opacity: 0;
-  transform: translateY(18px);
-  transition:
-    opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@utility fade-up-in {
-  opacity: 1;
-  transform: none;
-}
-
-/* Nav and small interactive text get a quieter underline than link-underline. */
-@utility hairline {
-  position: relative;
-  &::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    bottom: -0.3rem;
-    height: 1px;
-    background-color: currentColor;
-    opacity: 0.55;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  &:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .word-rise,
-  .frame-reveal,
-  .fade-up {
-    transition-duration: 1ms !important;
-    transform: none !important;
-    clip-path: none !important;
-    opacity: 1 !important;
-  }
-  .hairline::after {
-    transition-duration: 1ms !important;
+  .fade-in {
+    animation-duration: 1ms;
   }
 }

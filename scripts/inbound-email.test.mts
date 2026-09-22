@@ -13,10 +13,16 @@ import { createServer, type ViteDevServer } from "vite";
 const HANDLER = "/src/lib/api/inbound-email.server.ts";
 let vite: ViteDevServer;
 
-let pass = 0, fail = 0;
+let pass = 0,
+  fail = 0;
 const ok = (name: string, cond: boolean, got = "") => {
-  if (cond) { pass++; console.log(`  PASS  ${name}`); }
-  else { fail++; console.log(`  FAIL  ${name}${got ? "\n          " + got : ""}`); }
+  if (cond) {
+    pass++;
+    console.log(`  PASS  ${name}`);
+  } else {
+    fail++;
+    console.log(`  FAIL  ${name}${got ? "\n          " + got : ""}`);
+  }
 };
 
 // --- a stand-in for PostgREST ---------------------------------------------
@@ -47,7 +53,10 @@ globalThis.fetch = (async (input: any, init?: any) => {
   calls.push({ method, path, body });
 
   const reply = (payload: unknown, status = 200) =>
-    new Response(JSON.stringify(payload), { status, headers: { "content-type": "application/json" } });
+    new Response(JSON.stringify(payload), {
+      status,
+      headers: { "content-type": "application/json" },
+    });
 
   if (path.startsWith("/rest/v1/email_messages") && method === "GET")
     return reply(messageExists ? [{ id: "existing", thread_id: "t-old" }] : []);
@@ -72,7 +81,8 @@ function signed(body: string, secret = KEY) {
     "content-type": "application/json",
     "svix-id": id,
     "svix-timestamp": ts,
-    "svix-signature": "v1," + createHmac("sha256", secret).update(`${id}.${ts}.${body}`).digest("base64"),
+    "svix-signature":
+      "v1," + createHmac("sha256", secret).update(`${id}.${ts}.${body}`).digest("base64"),
   });
 }
 
@@ -102,13 +112,13 @@ const delivery = (over: Record<string, unknown> = {}) =>
     data: {
       email_id: "re_inbound_1",
       from: "Someone Outside <someone@example.com>",
-      to: ["frontdesk@meastroarchitecture.com"],
-      subject: "Re: A question about a site",
-      text: "Is the studio taking on work in Rochester?",
-      html: "<p>Is the studio taking on work in Rochester?</p>",
+      to: ["chambers@magmalegal.com"],
+      subject: "Re: A question about a matter",
+      text: "Are you taking new instructions in Lagos?",
+      html: "<p>Are you taking new instructions in Lagos?</p>",
       headers: [
         { name: "Message-Id", value: "<abc123@mail.example.com>" },
-        { name: "Subject", value: "Re: A question about a site" },
+        { name: "Subject", value: "Re: A question about a matter" },
       ],
       attachments: [],
       ...over,
@@ -116,12 +126,16 @@ const delivery = (over: Record<string, unknown> = {}) =>
   });
 
 const post = (mod: any, body: string, headers = signed(body)) =>
-  mod.handleInboundEmail(new Request("https://site.test/api/inbound-email", { method: "POST", body, headers }));
+  mod.handleInboundEmail(
+    new Request("https://site.test/api/inbound-email", { method: "POST", body, headers }),
+  );
 
 console.log("\n1. A correctly signed delivery is filed\n");
 {
   const mod = await loadHandler({});
-  calls = []; threadExists = false; messageExists = false;
+  calls = [];
+  threadExists = false;
+  messageExists = false;
   const body = delivery();
   const res = await post(mod, body);
   const out = await res.json();
@@ -131,39 +145,70 @@ console.log("\n1. A correctly signed delivery is filed\n");
   const threadInsert = calls.find((c) => c.method === "POST" && c.path.includes("email_threads"));
   const messageInsert = calls.find((c) => c.method === "POST" && c.path.includes("email_messages"));
   ok("opens a thread", Boolean(threadInsert));
-  ok("files the sender, not the recipient", (threadInsert?.body as any)?.participant_email === "someone@example.com",
-     JSON.stringify(threadInsert?.body));
-  ok("strips Re: for threading", (threadInsert?.body as any)?.subject === "A question about a site",
-     JSON.stringify((threadInsert?.body as any)?.subject));
+  ok(
+    "files the sender, not the recipient",
+    (threadInsert?.body as any)?.participant_email === "someone@example.com",
+    JSON.stringify(threadInsert?.body),
+  );
+  ok(
+    "strips Re: for threading",
+    (threadInsert?.body as any)?.subject === "A question about a matter",
+    JSON.stringify((threadInsert?.body as any)?.subject),
+  );
   const m = messageInsert?.body as any;
   ok("marks the message inbound", m?.direction === "inbound", JSON.stringify(m?.direction));
-  ok("keeps the real Message-Id for dedupe", m?.message_id === "<abc123@mail.example.com>", JSON.stringify(m?.message_id));
-  ok("records who it was sent to", m?.to_email === "frontdesk@meastroarchitecture.com", JSON.stringify(m?.to_email));
-  ok("keeps the original subject on the message", m?.subject === "Re: A question about a site", JSON.stringify(m?.subject));
-  ok("carries the body", m?.body_text?.includes("Rochester"), JSON.stringify(m?.body_text));
+  ok(
+    "keeps the real Message-Id for dedupe",
+    m?.message_id === "<abc123@mail.example.com>",
+    JSON.stringify(m?.message_id),
+  );
+  ok(
+    "records who it was sent to",
+    m?.to_email === "chambers@magmalegal.com",
+    JSON.stringify(m?.to_email),
+  );
+  ok(
+    "keeps the original subject on the message",
+    m?.subject === "Re: A question about a matter",
+    JSON.stringify(m?.subject),
+  );
+  ok("carries the body", m?.body_text?.includes("Lagos"), JSON.stringify(m?.body_text));
 }
 
 console.log("\n2. A retry of the same delivery is not filed twice\n");
 {
   const mod = await loadHandler({});
-  calls = []; messageExists = true;
+  calls = [];
+  messageExists = true;
   const res = await post(mod, delivery());
   const out = await res.json();
   ok("returns 200 so Resend stops retrying", res.status === 200);
   ok("reports it as a duplicate", out.deduped === true, JSON.stringify(out));
-  ok("writes nothing", !calls.some((c) => c.method === "POST"), JSON.stringify(calls.map((c) => c.method + " " + c.path)));
+  ok(
+    "writes nothing",
+    !calls.some((c) => c.method === "POST"),
+    JSON.stringify(calls.map((c) => c.method + " " + c.path)),
+  );
   messageExists = false;
 }
 
 console.log("\n3. Deliveries that are dropped, and why\n");
 {
   const mod = await loadHandler({});
-  for (const [name, type] of [["a delivery receipt", "email.delivered"], ["a bounce", "email.bounced"], ["an open", "email.opened"]] as [string, string][]) {
+  for (const [name, type] of [
+    ["a delivery receipt", "email.delivered"],
+    ["a bounce", "email.bounced"],
+    ["an open", "email.opened"],
+  ] as [string, string][]) {
     calls = [];
     const body = JSON.stringify({ type, data: {} });
     const res = await post(mod, body);
     const out = await res.json();
-    ok(`${name} is acknowledged and ignored`, res.status === 200 && out.ignored === true, JSON.stringify(out));
+    ok(
+      `${name} is acknowledged and ignored`,
+      res.status === 200 && out.ignored === true,
+      JSON.stringify(out),
+    );
   }
 
   // The worst case: real mail arriving under an event name this route does not
@@ -173,7 +218,7 @@ console.log("\n3. Deliveries that are dropped, and why\n");
     type: "email.inbound",
     data: {
       from: "Someone Outside <someone@example.com>",
-      to: ["frontdesk@meastroarchitecture.com"],
+      to: ["chambers@magmalegal.com"],
       subject: "HI",
       text: "a real message",
       headers: [{ name: "Message-Id", value: "<x@y>" }],
@@ -181,36 +226,48 @@ console.log("\n3. Deliveries that are dropped, and why\n");
   });
   const res = await post(mod, wrongType);
   const out = await res.json();
-  ok("real mail under an unexpected event type is not filed", !calls.some((c) => c.method === "POST"));
-  ok("but it is called out rather than dropped silently",
-     Boolean(out.warning) && /email.inbound/.test(out.warning), JSON.stringify(out));
+  ok(
+    "real mail under an unexpected event type is not filed",
+    !calls.some((c) => c.method === "POST"),
+  );
+  ok(
+    "but it is called out rather than dropped silently",
+    Boolean(out.warning) && /email.inbound/.test(out.warning),
+    JSON.stringify(out),
+  );
   ok("and the event name is reported", out.type === "email.inbound", JSON.stringify(out.type));
   console.log(`          Resend's log would show: ${JSON.stringify(out.warning)}`);
 
   const badFrom = await post(mod, delivery({ from: "" }));
-  ok("a delivery with no usable sender is refused with a reason",
-     badFrom.status === 400 && /sender/i.test((await badFrom.json()).error), String(badFrom.status));
+  ok(
+    "a delivery with no usable sender is refused with a reason",
+    badFrom.status === 400 && /sender/i.test((await badFrom.json()).error),
+    String(badFrom.status),
+  );
 
   threadInsertFails = 'relation "public.email_threads" does not exist';
   calls = [];
   const noTables = await post(mod, delivery({ headers: [] }));
   const noTablesBody = await noTables.json();
-  ok("a missing table surfaces as a 500 naming the relation",
-     noTables.status === 500 && /email_threads/.test(noTablesBody.error), JSON.stringify(noTablesBody));
+  ok(
+    "a missing table surfaces as a 500 naming the relation",
+    noTables.status === 500 && /email_threads/.test(noTablesBody.error),
+    JSON.stringify(noTablesBody),
+  );
   console.log(`          Resend's log would show: ${JSON.stringify(noTablesBody.error)}`);
   threadInsertFails = null;
 }
 
 console.log("\n3b. Our own notification mail, looping back in\n");
 {
-  const mod = await loadHandler({ MAIL_DOMAIN: "meastroarchitecture.com" });
+  const mod = await loadHandler({ MAIL_DOMAIN: "magmalegal.com" });
   calls = [];
   const loop = JSON.stringify({
     type: "email.received",
     data: {
       email_id: "re_loop",
-      from: "Meastro Architecture <no-reply@meastroarchitecture.com>",
-      to: ["frontdesk@meastroarchitecture.com"],
+      from: "Magma Legal Practitioners <no-reply@magmalegal.com>",
+      to: ["chambers@magmalegal.com"],
       subject: "New chat message from holly",
       text: "A visitor has started a chat.",
       headers: [{ name: "Message-Id", value: "<loop@x>" }],
@@ -218,8 +275,11 @@ console.log("\n3b. Our own notification mail, looping back in\n");
   });
   const res = await post(mod, loop);
   const out = await res.json();
-  ok("is not filed as an inbound thread", !calls.some((c) => c.method === "POST"),
-     JSON.stringify(calls.map((c) => c.method + " " + c.path)));
+  ok(
+    "is not filed as an inbound thread",
+    !calls.some((c) => c.method === "POST"),
+    JSON.stringify(calls.map((c) => c.method + " " + c.path)),
+  );
   ok("is acknowledged so Resend stops retrying", res.status === 200);
   ok("names the setting that causes it", /MAIL_NOTIFY_TO/.test(out.fix ?? ""), JSON.stringify(out));
   console.log(`          ${out.fix}`);
@@ -227,7 +287,10 @@ console.log("\n3b. Our own notification mail, looping back in\n");
   // A real person writing in must still get through.
   calls = [];
   const real = await post(mod, delivery());
-  ok("a genuine sender is unaffected", (await real.json()).ok === true && calls.some((c) => c.method === "POST"));
+  ok(
+    "a genuine sender is unaffected",
+    (await real.json()).ok === true && calls.some((c) => c.method === "POST"),
+  );
 }
 
 console.log("\n3c. The real inbound payload: envelope only, body behind email_id\n");
@@ -245,41 +308,83 @@ console.log("\n3c. The real inbound payload: envelope only, body behind email_id
       email_id: "eeabb2a7-1602-47da-bf27-4835375a8d96",
       from: "mfckr.eth@gmail.com",
       message_id: "<CALcXggntvCxvKsuPF4XsdyJcG9XyU6oZj9ecR9Scz4=S7XiUXQ@mail.gmail.com>",
-      received_for: ["frontdesk@meastroarchitecture.com"],
+      received_for: ["chambers@magmalegal.com"],
       subject: "Re: 1",
-      to: ["frontdesk@meastroarchitecture.com"],
+      to: ["chambers@magmalegal.com"],
     },
   });
 
   // a. the body comes back from the API
-  calls = []; resendCalls = []; threadExists = false; messageExists = false;
-  resendReply = { status: 200, body: { text: "the words that were missing", html: "<p>the words that were missing</p>" } };
+  calls = [];
+  resendCalls = [];
+  threadExists = false;
+  messageExists = false;
+  resendReply = {
+    status: 200,
+    body: { text: "the words that were missing", html: "<p>the words that were missing</p>" },
+  };
   const res = await post(mod, envelopeOnly);
   ok("returns 200", res.status === 200, String(res.status));
-  ok("asked Resend for the message by id", resendCalls.some((c) => c.includes("eeabb2a7")), JSON.stringify(resendCalls));
-  const filed = calls.find((c) => c.method === "POST" && c.path.includes("email_messages"))?.body as any;
-  ok("files the fetched body", filed?.body_text === "the words that were missing", JSON.stringify(filed?.body_text));
-  ok("uses the payload's own Message-Id, not Resend's internal id",
-     filed?.message_id === "<CALcXggntvCxvKsuPF4XsdyJcG9XyU6oZj9ecR9Scz4=S7XiUXQ@mail.gmail.com>",
-     JSON.stringify(filed?.message_id));
-  ok("strips Re: for threading", (calls.find((c) => c.method === "POST" && c.path.includes("email_threads"))?.body as any)?.subject === "1");
+  ok(
+    "asked Resend for the message by id",
+    resendCalls.some((c) => c.includes("eeabb2a7")),
+    JSON.stringify(resendCalls),
+  );
+  const filed = calls.find((c) => c.method === "POST" && c.path.includes("email_messages"))
+    ?.body as any;
+  ok(
+    "files the fetched body",
+    filed?.body_text === "the words that were missing",
+    JSON.stringify(filed?.body_text),
+  );
+  ok(
+    "uses the payload's own Message-Id, not Resend's internal id",
+    filed?.message_id === "<CALcXggntvCxvKsuPF4XsdyJcG9XyU6oZj9ecR9Scz4=S7XiUXQ@mail.gmail.com>",
+    JSON.stringify(filed?.message_id),
+  );
+  ok(
+    "strips Re: for threading",
+    (calls.find((c) => c.method === "POST" && c.path.includes("email_threads"))?.body as any)
+      ?.subject === "1",
+  );
 
   // b. every path 404s, so it must say what it tried
-  calls = []; resendCalls = []; threadExists = false; messageExists = false;
+  calls = [];
+  resendCalls = [];
+  threadExists = false;
+  messageExists = false;
   resendReply = { status: 404, body: { message: "not found" } };
   const res2 = await post(mod, envelopeOnly);
   ok("still files the message", res2.status === 200);
   ok("tries more than one path", resendCalls.length > 1, JSON.stringify(resendCalls));
-  const filed2 = calls.find((c) => c.method === "POST" && c.path.includes("email_messages"))?.body as any;
-  ok("records what every path answered", /404/.test(filed2?.body_text ?? ""), JSON.stringify(filed2?.body_text));
+  const filed2 = calls.find((c) => c.method === "POST" && c.path.includes("email_messages"))
+    ?.body as any;
+  ok(
+    "records what every path answered",
+    /404/.test(filed2?.body_text ?? ""),
+    JSON.stringify(filed2?.body_text),
+  );
   ok("still lists the payload fields", /email_id/.test(filed2?.body_text ?? ""));
-  console.log("\n" + String(filed2?.body_text).split("\n").map((l: string) => "          " + l).join("\n"));
+  console.log(
+    "\n" +
+      String(filed2?.body_text)
+        .split("\n")
+        .map((l: string) => "          " + l)
+        .join("\n"),
+  );
 
   // c. a payload that does carry a body must not cost a request
-  calls = []; resendCalls = []; threadExists = false; messageExists = false;
+  calls = [];
+  resendCalls = [];
+  threadExists = false;
+  messageExists = false;
   resendReply = { status: 200, body: { text: "should not be used" } };
   await post(mod, delivery());
-  ok("no fetch when the body is already in the payload", resendCalls.length === 0, JSON.stringify(resendCalls));
+  ok(
+    "no fetch when the body is already in the payload",
+    resendCalls.length === 0,
+    JSON.stringify(resendCalls),
+  );
   resendReply = null;
 }
 
@@ -287,18 +392,33 @@ console.log("\n4. A rejected signature explains itself in Resend's log\n");
 {
   const mod = await loadHandler({});
   const body = delivery();
-  const wrong = await post(mod, body, signed(body, Buffer.from("a-completely-different-key-32byt", "utf8")));
+  const wrong = await post(
+    mod,
+    body,
+    signed(body, Buffer.from("a-completely-different-key-32byt", "utf8")),
+  );
   const out = await wrong.json();
   ok("returns 401", wrong.status === 401);
-  ok("says the signature did not match", /signature/i.test(out.error + out.reason), JSON.stringify(out));
-  ok("names the variable to change", /RESEND_WEBHOOK_SECRET/.test(out.fix), JSON.stringify(out.fix));
+  ok(
+    "says the signature did not match",
+    /signature/i.test(out.error + out.reason),
+    JSON.stringify(out),
+  );
+  ok(
+    "names the variable to change",
+    /RESEND_WEBHOOK_SECRET/.test(out.fix),
+    JSON.stringify(out.fix),
+  );
 
   const apiKeyInSlot = await loadHandler({ RESEND_WEBHOOK_SECRET: "re_ABC123def456GHI789jkl" });
   const b2 = delivery();
   const res2 = await post(apiKeyInSlot, b2, signed(b2));
   const out2 = await res2.json();
-  ok("an API key pasted into the secret slot is named as such",
-     res2.status === 401 && /Resend API key/.test(out2.secret), JSON.stringify(out2.secret));
+  ok(
+    "an API key pasted into the secret slot is named as such",
+    res2.status === 401 && /Resend API key/.test(out2.secret),
+    JSON.stringify(out2.secret),
+  );
   console.log(`          Resend's log would show: ${JSON.stringify(out2.secret)}`);
 
   const noSecret = await loadHandler({ RESEND_WEBHOOK_SECRET: "" });
@@ -310,7 +430,9 @@ console.log("\n4. A rejected signature explains itself in Resend's log\n");
 console.log("\n5. Only POST is accepted\n");
 {
   const mod = await loadHandler({});
-  const res = await mod.handleInboundEmail(new Request("https://site.test/api/inbound-email", { method: "GET" }));
+  const res = await mod.handleInboundEmail(
+    new Request("https://site.test/api/inbound-email", { method: "GET" }),
+  );
   ok("a GET is refused with 405", res.status === 405);
 }
 

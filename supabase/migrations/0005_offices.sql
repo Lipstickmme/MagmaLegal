@@ -1,4 +1,4 @@
--- 0005_offices.sql — the studio's offices, one row each with a phone number.
+-- 0005_offices.sql — the firm's offices, one row each with a phone number.
 --
 -- Replaces the single `address` column added in 0004. That column is left in
 -- place (dropping it would break a deployment still running the old bundle);
@@ -17,19 +17,19 @@ begin;
 alter table public.site_settings
   add column if not exists offices jsonb not null default '[
     {
-      "label": "Rochester",
-      "address": "54-A Sager Dr, Rochester, NY 14607, United States",
-      "phone": "+1 929 647 6610"
+      "label": "Lagos",
+      "address": "Magma Chambers, 14 Idejo Street, Victoria Island, Lagos",
+      "phone": "+234 800 000 0001"
     },
     {
-      "label": "Jacksonville",
-      "address": "5646 St Augustine Rd, Jacksonville, FL 32206, United States",
-      "phone": "+1 945 216 0576"
+      "label": "Abuja",
+      "address": "2nd Floor, Trident House, Central Business District, Abuja",
+      "phone": "+234 800 000 0002"
     },
     {
-      "label": "Richmond",
-      "address": "13353 Commerce Parkway, Richmond, BC V6V 3A1, Canada",
-      "phone": "+1 604 243 2243"
+      "label": "Port Harcourt",
+      "address": "Suite 7, Waterline Court, GRA Phase 2, Port Harcourt",
+      "phone": "+234 800 000 0003"
     }
   ]'::jsonb;
 
@@ -44,7 +44,7 @@ alter table public.site_settings
 --
 -- Adding a column with a default backfills every existing row, so the array is
 -- never empty by the time we get here. The tell is that the first office still
--- holds the built-in Rochester address while `address` holds something else:
+-- holds the built-in Lagos address while `address` holds something else:
 -- that is an edit, and it would otherwise be silently dropped. Once rewritten
 -- the condition no longer matches, so re-running changes nothing.
 do $$
@@ -56,20 +56,20 @@ begin
     update public.site_settings
        set offices = jsonb_set(offices, '{0,address}', to_jsonb(address))
      where coalesce(address, '') <> ''
-       and address <> '54-A Sager Dr, Rochester, NY 14607, United States'
+       and address <> 'Magma Chambers, 14 Idejo Street, Victoria Island, Lagos'
        and jsonb_array_length(offices) > 0
-       and offices -> 0 ->> 'address' = '54-A Sager Dr, Rochester, NY 14607, United States';
+       and offices -> 0 ->> 'address' = 'Magma Chambers, 14 Idejo Street, Victoria Island, Lagos';
   end if;
 end $$;
 
--- 0003 seeded the hours with en dashes, which the studio has since dropped from
--- its copy. Only touch a row still carrying that exact string, so an edit made
--- from the dashboard survives.
+-- An earlier revision of 0003 seeded the hours with en dashes, which the firm
+-- has since dropped from its copy. Only touch a row still carrying that exact
+-- string, so an edit made from the dashboard survives.
 update public.site_settings
-   set hours = 'Monday to Friday, 09:00 to 18:00'
- where hours = 'Monday – Friday, 09:00 – 18:00';
+   set hours = 'Monday to Friday, 08:30 to 18:00'
+ where hours in ('Monday – Friday, 09:00 – 18:00', 'Monday to Friday, 09:00 to 18:00');
 
 alter table public.site_settings
-  alter column hours set default 'Monday to Friday, 09:00 to 18:00';
+  alter column hours set default 'Monday to Friday, 08:30 to 18:00';
 
 commit;

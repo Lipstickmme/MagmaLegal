@@ -11,7 +11,7 @@ import { useAdminAuth, type AdminAuth } from "@/hooks/useAdminAuth";
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Studio dashboard. Meastro Architecture" },
+      { title: "Chambers dashboard. Magma Legal Practitioners" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -63,7 +63,7 @@ function Dashboard({ email, onSignOut }: { email: string; onSignOut: () => void 
       <div className="mx-auto max-w-[92rem] px-5 md:px-10">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="eyebrow text-accent">Studio dashboard</p>
+            <p className="eyebrow text-accent">Chambers dashboard</p>
             <h1 className="mt-3 font-display text-4xl">Everything coming in</h1>
           </div>
           <div className="text-right">
@@ -125,7 +125,7 @@ function Gate({
   return (
     <section className="flex min-h-screen items-center bg-background py-32">
       <div className="mx-auto max-w-xl px-5 md:px-10">
-        <p className="eyebrow text-accent">Studio dashboard</p>
+        <p className="eyebrow text-accent">Chambers dashboard</p>
         <h1 className="mt-4 font-display text-4xl">{title}</h1>
         {body ? <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{body}</p> : null}
         {action}
@@ -149,7 +149,7 @@ function SignIn({ auth }: { auth: AdminAuth }) {
   return (
     <section className="flex min-h-screen items-center bg-background py-32">
       <div className="mx-auto w-full max-w-md px-5 md:px-10">
-        <p className="eyebrow text-accent">Studio dashboard</p>
+        <p className="eyebrow text-accent">Chambers dashboard</p>
         <h1 className="mt-4 font-display text-4xl">Sign in</h1>
 
         <form onSubmit={onSubmit} className="mt-10 space-y-8">

@@ -1,8 +1,25 @@
-# Meastro Architecture — site, chat and studio dashboard
+# Magma Legal Practitioners — site, live chat and chambers dashboard
 
 A TanStack Start (SSR) app on Vercel, backed by Supabase and Resend. The public
-site carries a visitor chat widget and a contact/booking form; `/admin` is a
-staff dashboard for everything that comes in.
+site carries a visitor chat widget, an enquiry form and a consultation booking
+form; `/admin` is a staff dashboard for everything that comes in.
+
+Five public pages:
+
+| Route             | What it is                                                           |
+| ----------------- | -------------------------------------------------------------------- |
+| `/`               | the lockup on black, the firm in short, practice areas, how we work  |
+| `/about`          | the firm, its approach, what it commits to, and its history          |
+| `/practice-areas` | all eight areas with the work under each, and how the firm charges   |
+| `/people`         | the practitioners, drawn as initials — there is no stock photography |
+| `/contact`        | contact details, the enquiry form and the consultation booking form  |
+
+`/admin` and `/auth` are the staff surfaces, and both are `noindex`.
+
+> **Before launch, replace the placeholder content.** See
+> [Placeholder content](#placeholder-content) — the addresses, phone numbers,
+> the eight practitioner profiles and the four figures on the home page are all
+> invented, and publishing them as the firm's own would misrepresent it.
 
 ## How it fits together
 
@@ -45,16 +62,17 @@ at**, which is not necessarily the one last opened in the dashboard — open
 
 In the Supabase SQL editor, run in order:
 
-| File                                         | Needed for                                                  |
-| -------------------------------------------- | ----------------------------------------------------------- |
-| `supabase/migrations/0001_init.sql`          | everything: admins, enquiries, bookings, chat               |
-| `supabase/migrations/0002_email.sql`         | optional — only to receive mail through the inbound webhook |
-| `supabase/migrations/0003_site_settings.sql` | the contact details the Settings tab edits                  |
-| `supabase/migrations/0004_site_address.sql`  | superseded by 0005; run it anyway, in order                 |
-| `supabase/migrations/0005_offices.sql`       | the studio offices, one address and phone each              |
-| `supabase/migrations/0006_schema_report.sql` | lets `/api/health` and `verify.sql` name anything missing   |
+| File                                           | Needed for                                                  |
+| ---------------------------------------------- | ----------------------------------------------------------- |
+| `supabase/migrations/0001_init.sql`            | everything: admins, enquiries, bookings, chat               |
+| `supabase/migrations/0002_email.sql`           | optional — only to receive mail through the inbound webhook |
+| `supabase/migrations/0003_site_settings.sql`   | the contact details the Settings tab edits                  |
+| `supabase/migrations/0004_site_address.sql`    | superseded by 0005; run it anyway, in order                 |
+| `supabase/migrations/0005_offices.sql`         | the firm's offices, one address and phone each              |
+| `supabase/migrations/0006_schema_report.sql`   | lets `/api/health` and `verify.sql` name anything missing   |
+| `supabase/migrations/0007_contact_details.sql` | only needed if 0003–0005 ran under the template's details   |
 
-All six are guarded, atomic and re-runnable: applying them twice is a no-op,
+All seven are guarded, atomic and re-runnable: applying them twice is a no-op,
 not an error, and an edit made from the dashboard survives a re-run.
 
 The transaction around each one matters more than it looks. A policy is made
@@ -75,7 +93,7 @@ It is worth re-running whenever something stops working for no obvious reason.
 A missing policy is invisible from the outside: the tables are all there, the
 server reads them happily with the service role, and the only symptom is a
 visitor being refused with `new row violates row-level security policy`, which
-reads like a bug in the widget. A missing *grant* is worse, because it produces
+reads like a bug in the widget. A missing _grant_ is worse, because it produces
 `permission denied for table chat_messages`, which looks the same to a visitor
 and to anyone reading the widget, and a check that only looked at policies said
 everything was fine. Both are reported under `schema`.
@@ -94,12 +112,12 @@ It signs in anonymously with the browser's own key, opens a conversation, sends
 a message, reads it back, and deletes what it wrote. Each step is reported, and
 a failing one is named for what it actually is:
 
-| What comes back | What to do |
-| --- | --- |
-| `sign in anonymously` fails | Anonymous sign-ins are off. Authentication → Sign In / Providers. |
-| a step reports `missing GRANT` | Re-run `0001_init.sql`. |
-| a step reports `missing POLICY` | Re-run `0001_init.sql`; `schema` names which one. |
-| a step reports an auth problem | The visitor's token was rejected; not a schema fault. |
+| What comes back                 | What to do                                                        |
+| ------------------------------- | ----------------------------------------------------------------- |
+| `sign in anonymously` fails     | Anonymous sign-ins are off. Authentication → Sign In / Providers. |
+| a step reports `missing GRANT`  | Re-run `0001_init.sql`.                                           |
+| a step reports `missing POLICY` | Re-run `0001_init.sql`; `schema` names which one.                 |
+| a step reports an auth problem  | The visitor's token was rejected; not a schema fault.             |
 
 It writes two rows and deletes them again, so it is opt-in rather than part of
 the ordinary health check.
@@ -123,7 +141,7 @@ In Vercel → **Settings → Environment Variables** (Production _and_ Preview).
 | `RESEND_API_KEY`            | **server only**     | no       | Sends notifications and email replies. Unset means mail is skipped and logged; nothing else breaks.                                    |
 | `RESEND_WEBHOOK_SECRET`     | **server only**     | no       | `whsec_…` Svix signing secret for `/api/inbound-email`. Required only to receive mail.                                                 |
 | `MAIL_DOMAIN`               | server only         | no       | One domain drives every address below.                                                                                                 |
-| `MAIL_FROM`                 | server only         | no       | Defaults to `Meastro Architecture <no-reply@$MAIL_DOMAIN>`.                                                                            |
+| `MAIL_FROM`                 | server only         | no       | Defaults to `Magma Legal Practitioners <no-reply@$MAIL_DOMAIN>`.                                                                       |
 | `MAIL_REPLY_TO`             | server only         | no       | Defaults to `hello@$MAIL_DOMAIN`.                                                                                                      |
 | `MAIL_NOTIFY_TO`            | server only         | no       | Where visitor notifications land. Defaults to `MAIL_REPLY_TO`.                                                                         |
 
@@ -146,35 +164,65 @@ secret decodes to a usable key.
 default branch is something else deploys nothing — check
 Settings → Git → Production Branch.
 
-## Project photography
+## Brand assets
 
-Each project has a profile page at `/projects/<slug>` carrying a before/after
-comparison and up to four details of the building, or of the interior where the
-project is an interiors commission. Images live at:
+Everything the site draws is derived from two masters, which are the artwork as
+it was supplied:
 
 ```
-src/assets/projects/<slug>/before.webp
-src/assets/projects/<slug>/after.webp
-src/assets/projects/<slug>/part-1.webp … part-4.webp
-src/assets/projects/<slug>/cover.webp   (optional; falls back to after.webp)
+src/assets/brand/magma-on-black.png   the light lockup on black
+src/assets/brand/magma-on-white.png   the dark lockup on white
 ```
 
-`src/lib/projects.ts` globs that directory, so committing a file is all it takes
-and there is no manifest to update. The glob resolves at build time, so the
-image appears once the site rebuilds; a push does that automatically.
+Neither can go straight onto a page. The header is transparent over the hero, so
+a black square behind the mark would show; the footer is near-black, so a white
+one would. `scripts/brand-assets.py` keys the ground out of each master by
+un-premultiplying against it — which keeps every anti-aliased edge's partial
+coverage, and the crimson gradient in the pans — and writes:
 
-The slot number matters. `part-1.webp` is printed under the first caption in
-that project's `parts` array, `part-2.webp` under the second, and so on, so
-renaming a file moves a photograph under someone else's caption. A slot with no
-file is skipped rather than left blank, so a project with only `part-1` and
-`part-3` shows two details and no gap. A project with no cover, no `after` and
-no `legacy` draws a ruled "Photography in progress" panel on the index instead
-of a broken frame.
+```
+src/assets/brand/lockup-light.webp    full lockup, light ink, for dark grounds
+src/assets/brand/lockup-dark.webp     full lockup, dark ink, for pale grounds
+src/assets/brand/mark-light.webp      scales only, light ink   (header, watermark)
+src/assets/brand/mark-dark.webp       scales only, dark ink    (header, scrolled)
+public/favicon.ico                    16/32/48, mark on ink
+public/apple-touch-icon.png           180×180, mark on ink
+public/link-card.png                  1200×630 og:image
+```
 
-The generation prompts live in `docs/`: `image-prompts.md` for the original set,
-then `image-prompts-round-2.md`, `-round-3.md` and `-round-4.md`. Each carries
-the house style, the negative prompt, and a per-frame prompt. The appendix at
-the end of round four lists the frames still outstanding across the whole site.
+Each artwork is only correct on the ground it was keyed from, which is how
+`src/components/site/Logo.tsx` uses it: `tone="light"` on ink, `tone="dark"` on
+paper. Lossless WebP, because a lossy edge shows as a grey halo against the
+ground the artwork is supposed to disappear into.
+
+To change the logo, replace a master and re-run the script. It needs Pillow,
+which is deliberately not a project dependency — the output is committed:
+
+```bash
+pip install pillow && python3 scripts/brand-assets.py
+```
+
+`SPLIT_Y` in that file is the row where the lockup stops being the mark and
+starts being the wordmark. A master with different proportions needs it moved.
+
+## Placeholder content
+
+Five things are invented and must be replaced before the site is public. None of
+them needs a redeploy except the last two.
+
+| What                                  | Where                                   |
+| ------------------------------------- | --------------------------------------- |
+| Email, website, office hours          | /admin → Settings, or `src/lib/site.ts` |
+| Three office addresses and phones     | /admin → Settings, or `src/lib/site.ts` |
+| Eight practitioner profiles           | `PEOPLE` in `src/routes/people.tsx`     |
+| "14 years / 600+ matters / 22 people" | `FIGURES` in `src/routes/index.tsx`     |
+| Firm history, 2012–2024               | `TIMELINE` in `src/routes/about.tsx`    |
+
+The practice areas in `src/lib/practice-areas.ts` are real areas of practice
+described generically; read them before publishing, because a firm that does not
+do energy work should not list it. The footer's disclaimer and the notice above
+the enquiry form are drafted for a jurisdiction that uses "solicitor"; the
+firm's own wording is the one that matters.
 
 ## Editable contact details
 
@@ -251,7 +299,7 @@ cannot tell them apart. Work down the list; `/api/health` answers the last two.
 
 1. **Resend never received it.** Receiving mail needs the domain's **MX records**
    pointing at Resend, which is separate from the TXT records that let you
-   *send*. A domain verified for sending still delivers its incoming mail
+   _send_. A domain verified for sending still delivers its incoming mail
    wherever its MX says, and that delivery succeeds, which is why nothing
    bounces. If Resend's webhook log shows no attempt at all for the time you
    sent, this is it.
@@ -288,7 +336,7 @@ A `200` that then shows up in **/admin → Email** means the endpoint, the secre
 the database and the dashboard are all fine, and the only thing left is that
 Resend is not calling the URL. Receiving mail and forwarding it to a webhook are
 two separate settings there, and the first can work while the second is missing.
-A `200` that does *not* show up is the admin SELECT policy above. A `401` or
+A `200` that does _not_ show up is the admin SELECT policy above. A `401` or
 `500` names itself in the response.
 
 There is one more way to get zeros with everything else green: Resend calling
@@ -351,7 +399,11 @@ Put the same variables in a local `.env`. `/api/health` works in dev too.
 src/
   server.ts                  SSR entry + the /api/* route table
   start.ts                   global server-fn auth middleware + CSRF
+  styles.css                 the palette, the type pairing and every utility
+  assets/brand/              two masters + the four keyed artworks (see above)
   lib/
+    site.ts                  the firm's identity, offices and contact fallbacks
+    practice-areas.ts        the eight areas; the home page reads the first six
     public-config.ts         loadPublicConfig / setPublicConfig / isSupabaseConfigured
     supabase.ts              lazy Proxy around the browser client
     database.types.ts        row types, kept in step with the SQL
@@ -363,13 +415,18 @@ src/
       health.server.ts         GET  /api/health
   hooks/                     useVisitorChat, useAdminAuth, useFormSubmit, useRealtimeRows
   components/chat/           the floating visitor widget
-  components/admin/          the four dashboard tabs
+  components/admin/          the five dashboard tabs
+  components/site/           Header, Footer, Logo, PageHero and the reveals
   routes/                    file-based routes; /admin and /auth are noindex
 supabase/
   migrations/0001_init.sql   admins, enquiries, bookings, chat, RLS, realtime
   migrations/0002_email.sql  email threads and messages (optional)
   grant-admin.sql            put a person on the staff list
   verify.sql                 assert the schema is what the app expects
+scripts/
+  brand-assets.py            regenerate every logo asset from the two masters
+  check-resend.mjs           read-only mail checks, and one real send
+  *.test.mts                 157 offline assertions over the mail and chat code
 ```
 
 ## If a deploy does not show your changes
@@ -397,6 +454,26 @@ package-lock.json && npx npm@11 install` — and verify with
   `.vercel/output` — check the build command in Vercel matches `vercel.json`.
 - **Everything renders but chat and the dashboard are off.** That is
   configuration, not deployment: `/api/health` names the missing variables.
+
+## What this build dropped from the template
+
+The site came from an architecture-studio template, so the weight it carried was
+mostly photography and unused UI:
+
+- 130-odd project and testimonial photographs, plus the project record, the
+  before/after slider, the project cover fallbacks and the two `/projects`
+  routes.
+- The whole `src/components/ui/` shadcn set (48 files). Nothing outside that
+  directory imported any of it, which took **41 dependencies** with it — every
+  Radix package, recharts, embla, vaul, cmdk, react-hook-form, date-fns,
+  tailwind-merge and the rest. The lockfile went from 251 KB to 164 KB.
+- The floating testimonial card, the hero shutter, the ken-burns and photo-scrim
+  utilities, `docs/image-prompts*.md` (125 KB of generation prompts) and the
+  duplicate `link-card.jpg`.
+
+What stayed is the whole backend: Supabase auth and RLS, the anonymous-visitor
+chat, `submitForm`, the Resend send and inbound webhook, `/api/health` and the
+five-tab dashboard. The 157 offline assertions in `scripts/` still pass.
 
 ## Notes for future edits
 

@@ -514,7 +514,7 @@ export async function handleHealthCheck(request: Request): Promise<Response> {
     {
       status: missing.length === 0 && schema.ok ? "ok" : "misconfigured",
       // `status` is about whether the site works; mail is separate, because a
-      // studio can be serving pages perfectly while every notification bounces.
+      // site can be serving pages perfectly while every notification bounces.
       mail: mailSummary(),
       schema,
       chat,

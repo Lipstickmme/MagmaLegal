@@ -7,7 +7,7 @@ import { DEFAULT_SITE_SETTINGS, parseOffices, type SiteSettings } from "./site";
  * first paint already has them.
  *
  * Degrades to the defaults in site.ts on any failure — an unapplied migration,
- * an unreachable database, a missing row. A studio's address block going blank
+ * an unreachable database, a missing row. An office address block going blank
  * is a worse outcome than it being briefly stale. The select is `*` rather than
  * a column list for the same reason: a deployment running ahead of its
  * migrations still gets the columns that do exist.

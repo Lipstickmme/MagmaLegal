@@ -23,7 +23,7 @@ const FIELDS: { key: TextKey; label: string; hint: string; type: string }[] = [
   },
   {
     key: "hours",
-    label: "Studio hours",
+    label: "Office hours",
     hint: "Contact page only; the footer omits it.",
     type: "text",
   },
@@ -44,7 +44,7 @@ const EMPTY_OFFICE: Office = { label: "", address: "", phone: "" };
 const MISSING_TABLE =
   "Contact settings are not set up on this project. Apply supabase/migrations/0003_site_settings.sql, then reload.";
 const MISSING_OFFICES =
-  "The offices column is not on this project yet. Apply supabase/migrations/0005_offices.sql, then reload. Until then the site prints the three built-in studio addresses.";
+  "The offices column is not on this project yet. Apply supabase/migrations/0005_offices.sql, then reload. Until then the site prints the three built-in office addresses.";
 
 /**
  * The contact block, editable. Writes straight to `site_settings` under the
@@ -200,7 +200,7 @@ export function SettingsTab({ enabled }: { enabled: boolean }) {
 
           {values.offices.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No offices listed. The site falls back to the three built-in studio addresses until
+              No offices listed. The site falls back to the three built-in office addresses until
               you add one.
             </p>
           ) : null}

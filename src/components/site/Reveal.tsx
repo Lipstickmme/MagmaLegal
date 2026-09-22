@@ -5,11 +5,14 @@ export function Reveal({
   delay = 0,
   className = "",
   as: Tag = "div",
+  id,
 }: {
   children: ReactNode;
   delay?: number;
   className?: string;
   as?: "div" | "section" | "li" | "span";
+  /** Anchor target, for the sections other pages link to by hash. */
+  id?: string;
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const [shown, setShown] = useState(false);
@@ -34,6 +37,7 @@ export function Reveal({
   return (
     <Component
       ref={ref as never}
+      id={id}
       style={{ transitionDelay: `${delay}ms` }}
       className={`reveal ${shown ? "reveal-in" : ""} ${className}`}
     >

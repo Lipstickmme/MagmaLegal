@@ -1,4 +1,4 @@
--- 0003_site_settings.sql — contact details the studio can edit from /admin.
+-- 0003_site_settings.sql — contact details the firm can edit from /admin.
 --
 -- Guarded and re-runnable, like 0001 and 0002.
 --
@@ -19,9 +19,9 @@ create extension if not exists pgcrypto;
 
 create table if not exists public.site_settings (
   id text primary key default 'default',
-  email text not null default 'frontdesk@meastroarchitecture.com',
-  website text not null default 'www.meastroarchitecture.com',
-  hours text not null default 'Monday – Friday, 09:00 – 18:00',
+  email text not null default 'chambers@magmalegal.com',
+  website text not null default 'www.magmalegal.com',
+  hours text not null default 'Monday to Friday, 08:30 to 18:00',
   updated_at timestamptz not null default now(),
   constraint site_settings_single_row check (id = 'default')
 );

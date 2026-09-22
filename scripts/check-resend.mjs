@@ -7,7 +7,7 @@
 // Reads the same variable names the app reads, in the same order. Pass them in
 // however you like:
 //
-//   RESEND_API_KEY=re_... MAIL_DOMAIN=meastroarchitecture.com \
+//   RESEND_API_KEY=re_... MAIL_DOMAIN=magmalegal.com \
 //     node scripts/check-resend.mjs you@gmail.com
 //
 // Or pull them straight out of the deployment, which is the version worth
@@ -29,7 +29,7 @@ const apiKey = pick("RESEND_API_KEY");
 const webhookSecret = pick("RESEND_WEBHOOK_SECRET", "RESEND_SIGNING_SECRET");
 const domain = pick("MAIL_DOMAIN");
 const MAIL_DOMAIN = domain?.value ?? "example.com";
-const MAIL_FROM = pick("MAIL_FROM")?.value ?? `Meastro Architecture <no-reply@${MAIL_DOMAIN}>`;
+const MAIL_FROM = pick("MAIL_FROM")?.value ?? `Magma Legal Practitioners <no-reply@${MAIL_DOMAIN}>`;
 const MAIL_REPLY_TO = pick("MAIL_REPLY_TO")?.value ?? `hello@${MAIL_DOMAIN}`;
 const MAIL_NOTIFY_TO = pick("MAIL_NOTIFY_TO", "NOTIFY_TO", "STAFF_EMAIL")?.value ?? MAIL_REPLY_TO;
 
@@ -177,7 +177,7 @@ if (apiKey) {
         from: MAIL_FROM,
         to: [to],
         reply_to: MAIL_REPLY_TO,
-        subject: "Meastro Architecture: Resend configuration test",
+        subject: "Magma Legal Practitioners: Resend configuration test",
         html: `<p>This is the test sent by <code>scripts/check-resend.mjs</code>.</p>
                <p>If it reached you, sending works with these settings:</p>
                <ul>

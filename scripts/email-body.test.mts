@@ -5,18 +5,24 @@
 // and the dashboard only ever reading body_text when the message was HTML.
 import { htmlToText } from "../src/lib/html-to-text.ts";
 
-let pass = 0, fail = 0;
+let pass = 0,
+  fail = 0;
 const ok = (name: string, cond: boolean, got = "") => {
-  if (cond) { pass++; console.log(`  PASS  ${name}`); }
-  else { fail++; console.log(`  FAIL  ${name}${got ? "\n          got: " + JSON.stringify(got) : ""}`); }
+  if (cond) {
+    pass++;
+    console.log(`  PASS  ${name}`);
+  } else {
+    fail++;
+    console.log(`  FAIL  ${name}${got ? "\n          got: " + JSON.stringify(got) : ""}`);
+  }
 };
 
 console.log("\n1. Turning an HTML email into something readable\n");
 {
-  const gmail = `<div dir="ltr">Hi there,<br><br>Is the studio taking on work in&nbsp;Rochester?<br><br>Thanks,<br>Someone</div>`;
+  const gmail = `<div dir="ltr">Hi there,<br><br>Are you taking new instructions in&nbsp;Lagos?<br><br>Thanks,<br>Someone</div>`;
   const out = htmlToText(gmail);
-  ok("keeps the words", /Is the studio taking on work in Rochester\?/.test(out), out);
-  ok("turns <br><br> into a paragraph break", /Hi there,\n\nIs the studio/.test(out), out);
+  ok("keeps the words", /Are you taking new instructions in Lagos\?/.test(out), out);
+  ok("turns <br><br> into a paragraph break", /Hi there,\n\nAre you taking/.test(out), out);
   ok("decodes &nbsp;", !out.includes("&nbsp;"), out);
   console.log("        ->", JSON.stringify(out));
 }
@@ -35,14 +41,32 @@ console.log("\n1. Turning an HTML email into something readable\n");
 }
 {
   const list = `<ul><li>One</li><li>Two</li></ul>`;
-  ok("marks list items", /• One/.test(htmlToText(list)) && /• Two/.test(htmlToText(list)), htmlToText(list));
+  ok(
+    "marks list items",
+    /• One/.test(htmlToText(list)) && /• Two/.test(htmlToText(list)),
+    htmlToText(list),
+  );
 }
 {
-  ok("entities decode", htmlToText("<p>Tom &amp; Jerry &lt;tom@x.com&gt;</p>") === "Tom & Jerry <tom@x.com>",
-     htmlToText("<p>Tom &amp; Jerry &lt;tom@x.com&gt;</p>"));
-  ok("numeric entities decode", htmlToText("<p>caf&#233;</p>") === "café", htmlToText("<p>caf&#233;</p>"));
-  ok("an empty body stays empty", htmlToText("") === "" && htmlToText(null) === "" && htmlToText(undefined) === "");
-  ok("whitespace-only html is empty", htmlToText("<div>   </div>") === "", htmlToText("<div>   </div>"));
+  ok(
+    "entities decode",
+    htmlToText("<p>Tom &amp; Jerry &lt;tom@x.com&gt;</p>") === "Tom & Jerry <tom@x.com>",
+    htmlToText("<p>Tom &amp; Jerry &lt;tom@x.com&gt;</p>"),
+  );
+  ok(
+    "numeric entities decode",
+    htmlToText("<p>caf&#233;</p>") === "café",
+    htmlToText("<p>caf&#233;</p>"),
+  );
+  ok(
+    "an empty body stays empty",
+    htmlToText("") === "" && htmlToText(null) === "" && htmlToText(undefined) === "",
+  );
+  ok(
+    "whitespace-only html is empty",
+    htmlToText("<div>   </div>") === "",
+    htmlToText("<div>   </div>"),
+  );
 }
 
 console.log("\n2. Finding the body wherever the provider put it\n");
@@ -78,13 +102,19 @@ console.log("\n3. What the dashboard prints\n");
     return "(this message arrived with no body)";
   };
   ok("plain text is printed as-is", readable({ body_text: "hello", body_html: null }) === "hello");
-  ok("an HTML-only message is readable instead of '(no plain-text body)'",
-     readable({ body_text: null, body_html: "<p>the actual message</p>" }) === "the actual message",
-     readable({ body_text: null, body_html: "<p>the actual message</p>" }));
-  ok("a genuinely empty message says so",
-     readable({ body_text: null, body_html: null }) === "(this message arrived with no body)");
-  ok("whitespace-only text falls through to the html",
-     readable({ body_text: "   ", body_html: "<p>real</p>" }) === "real");
+  ok(
+    "an HTML-only message is readable instead of '(no plain-text body)'",
+    readable({ body_text: null, body_html: "<p>the actual message</p>" }) === "the actual message",
+    readable({ body_text: null, body_html: "<p>the actual message</p>" }),
+  );
+  ok(
+    "a genuinely empty message says so",
+    readable({ body_text: null, body_html: null }) === "(this message arrived with no body)",
+  );
+  ok(
+    "whitespace-only text falls through to the html",
+    readable({ body_text: "   ", body_html: "<p>real</p>" }) === "real",
+  );
 }
 
 console.log(`\n${pass} passed, ${fail} failed\n`);

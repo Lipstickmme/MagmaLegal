@@ -2,11 +2,12 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 
 import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { SITE } from "@/lib/site";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Staff sign in. Meastro Architecture" },
+      { title: "Staff sign in. Magma Legal Practitioners" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -30,13 +31,13 @@ function AuthPage() {
 
   return (
     <section className="relative flex min-h-screen items-center bg-background py-32">
-      <div className="pointer-events-none absolute inset-0 plan-grid opacity-60" />
+      <div className="pointer-events-none absolute inset-0 rule-grid opacity-60" />
       <div className="relative mx-auto w-full max-w-md px-5 md:px-10">
-        <p className="eyebrow text-accent">Meastro Architecture</p>
+        <p className="eyebrow text-accent">{SITE.name}</p>
         <h1 className="mt-4 font-display text-4xl">Staff sign in</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          For the studio dashboard. Visitors do not need an account, the chat widget signs itself in
-          anonymously.
+          For the chambers dashboard. Visitors do not need an account, the chat widget signs itself
+          in anonymously.
         </p>
 
         <form onSubmit={onSubmit} className="mt-10 space-y-8">

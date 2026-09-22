@@ -4,10 +4,16 @@
 // these are the shapes they could be in.
 import { parseMime } from "../src/lib/mime.ts";
 
-let pass = 0, fail = 0;
+let pass = 0,
+  fail = 0;
 const ok = (name: string, cond: boolean, got = "") => {
-  if (cond) { pass++; console.log(`  PASS  ${name}`); }
-  else { fail++; console.log(`  FAIL  ${name}${got ? "\n          got: " + JSON.stringify(got) : ""}`); }
+  if (cond) {
+    pass++;
+    console.log(`  PASS  ${name}`);
+  } else {
+    fail++;
+    console.log(`  FAIL  ${name}${got ? "\n          got: " + JSON.stringify(got) : ""}`);
+  }
 };
 
 const CRLF = "\r\n";
@@ -20,17 +26,17 @@ console.log("\n1. A plain-text message\n");
     "Subject: HI",
     "Content-Type: text/plain; charset=utf-8",
     "",
-    "Is the studio taking on work in Rochester?",
+    "Are you taking new instructions in Lagos?",
   ]);
   const out = parseMime(raw);
-  ok("finds the text", out.text === "Is the studio taking on work in Rochester?", out.text);
+  ok("finds the text", out.text === "Are you taking new instructions in Lagos?", out.text);
   ok("no html", out.html === "");
 }
 
 console.log("\n2. multipart/alternative, as most mail clients send\n");
 {
   const raw = msg([
-    "Content-Type: multipart/alternative; boundary=\"XYZ\"",
+    'Content-Type: multipart/alternative; boundary="XYZ"',
     "",
     "--XYZ",
     "Content-Type: text/plain; charset=utf-8",
@@ -71,23 +77,39 @@ console.log("\n4. The whole message handed over base64-encoded\n");
 {
   const inner = msg(["Content-Type: text/plain", "", "inside the envelope"]);
   const wrapped = Buffer.from(inner, "utf8").toString("base64");
-  ok("unwraps and parses", parseMime(wrapped).text === "inside the envelope", parseMime(wrapped).text);
+  ok(
+    "unwraps and parses",
+    parseMime(wrapped).text === "inside the envelope",
+    parseMime(wrapped).text,
+  );
 }
 
 console.log("\n5. A folded Content-Type header\n");
 {
-  const raw = ["Content-Type: multipart/mixed;", "\tboundary=\"AAA\"", "", "--AAA",
-    "Content-Type: text/plain", "", "found anyway", "--AAA--"].join(CRLF);
-  ok("unfolds the header and still finds the part", parseMime(raw).text === "found anyway", parseMime(raw).text);
+  const raw = [
+    "Content-Type: multipart/mixed;",
+    '\tboundary="AAA"',
+    "",
+    "--AAA",
+    "Content-Type: text/plain",
+    "",
+    "found anyway",
+    "--AAA--",
+  ].join(CRLF);
+  ok(
+    "unfolds the header and still finds the part",
+    parseMime(raw).text === "found anyway",
+    parseMime(raw).text,
+  );
 }
 
 console.log("\n6. Nested multipart, text inside an alternative inside a mixed\n");
 {
   const raw = msg([
-    "Content-Type: multipart/mixed; boundary=\"OUT\"",
+    'Content-Type: multipart/mixed; boundary="OUT"',
     "",
     "--OUT",
-    "Content-Type: multipart/alternative; boundary=\"IN\"",
+    'Content-Type: multipart/alternative; boundary="IN"',
     "",
     "--IN",
     "Content-Type: text/plain",
@@ -110,8 +132,15 @@ console.log("\n7. Things that must not produce wreckage\n");
     ["multipart with no boundary", "Content-Type: multipart/mixed\r\n\r\nnothing"],
   ] as [string, unknown][]) {
     const out = parseMime(value);
-    ok(`${name} returns empty strings`, out.text === "" || typeof out.text === "string", JSON.stringify(out));
-    ok(`${name} never returns undefined`, typeof out.text === "string" && typeof out.html === "string");
+    ok(
+      `${name} returns empty strings`,
+      out.text === "" || typeof out.text === "string",
+      JSON.stringify(out),
+    );
+    ok(
+      `${name} never returns undefined`,
+      typeof out.text === "string" && typeof out.html === "string",
+    );
   }
 }
 
@@ -119,10 +148,16 @@ console.log("\n8. pickBody reaches into raw MIME only when nothing simpler works
 {
   const { pickBody } = await import("../src/lib/api/_shared.server.ts");
   const raw = msg(["Content-Type: text/plain", "", "from the raw message"]);
-  ok("raw is used when text and html are absent", pickBody({ raw }).text === "from the raw message",
-     pickBody({ raw }).text);
-  ok("a parsed text field still wins", pickBody({ text: "parsed", raw }).text === "parsed",
-     pickBody({ text: "parsed", raw }).text);
+  ok(
+    "raw is used when text and html are absent",
+    pickBody({ raw }).text === "from the raw message",
+    pickBody({ raw }).text,
+  );
+  ok(
+    "a parsed text field still wins",
+    pickBody({ text: "parsed", raw }).text === "parsed",
+    pickBody({ text: "parsed", raw }).text,
+  );
   ok("other raw key names are tried", pickBody({ raw_email: raw }).text === "from the raw message");
   ok("nothing anywhere is still empty", pickBody({ subject: "x" }).text === "");
 }
@@ -142,7 +177,13 @@ console.log("\n9. A delivery with no body explains itself in the dashboard\n");
   ok("shows array sizes", /attachments: array\(2\)/.test(out), out);
   ok("previews string values", /the body might be in here/.test(out), out);
   ok("is bounded", describePayloadShape({ big: "x".repeat(50000) }).length <= 1800);
-  console.log("\n" + out.split("\n").map((l) => "        " + l).join("\n"));
+  console.log(
+    "\n" +
+      out
+        .split("\n")
+        .map((l) => "        " + l)
+        .join("\n"),
+  );
 }
 
 console.log(`\n${pass} passed, ${fail} failed\n`);

@@ -18,13 +18,12 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ScrollUp } from "@/components/site/ScrollUp";
 import { ChatWidget } from "@/components/chat/ChatWidget";
-import { TestimonialCard } from "@/components/site/TestimonialCard";
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
+        <h1 className="font-display text-7xl text-foreground">404</h1>
         <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
@@ -88,13 +87,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Meastro Architecture" },
+      { title: "Magma Legal Practitioners" },
       {
         name: "description",
         content:
-          "Architecture and interior design studio with offices in Rochester NY, Jacksonville FL and Richmond BC.",
+          "Magma Legal Practitioners — commercial counsel, advocacy and advisory, with offices in Lagos, Abuja and Port Harcourt.",
       },
-      { name: "author", content: "Meastro Architecture" },
+      { name: "author", content: "Magma Legal Practitioners" },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "/link-card.png" },
       { property: "og:image:width", content: "1200" },
@@ -111,7 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Jost:wght@300;400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Spectral:wght@300;400;500;600&family=Jost:wght@300;400;500;600&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", sizes: "16x16 32x32 48x48" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
@@ -182,10 +181,6 @@ function RootComponent() {
   // unconditionally — when Supabase is unconfigured the panel says so, rather
   // than the launcher quietly not existing.
   const showChat = !(pathname.startsWith("/admin") || pathname.startsWith("/auth"));
-  // The quote card floats at the top left. Project profiles run full-bleed
-  // photography the whole way down, so there it lands on an image rather than
-  // on the pale ground it needs. Everywhere else has margins.
-  const showTestimonials = showChat && !/^\/projects\/[^/]+/.test(pathname);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -198,7 +193,6 @@ function RootComponent() {
         </main>
         <Footer />
         <ScrollUp />
-        {showTestimonials ? <TestimonialCard /> : null}
         {showChat ? <ChatWidget /> : null}
       </SiteSettingsProvider>
     </QueryClientProvider>

@@ -14,9 +14,8 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
-import { Route as ProjectsRouteImport } from './routes/projects'
-import { Route as ServicesRouteImport } from './routes/services'
-import { Route as ProjectsSlugRouteImport } from './routes/projects_.$slug'
+import { Route as PeopleRouteImport } from './routes/people'
+import { Route as PracticeAreasRouteImport } from './routes/practice-areas'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -43,19 +42,14 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
+const PeopleRoute = PeopleRouteImport.update({
+  id: '/people',
+  path: '/people',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ServicesRoute = ServicesRouteImport.update({
-  id: '/services',
-  path: '/services',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
-  id: '/projects_/$slug',
-  path: '/projects/$slug',
+const PracticeAreasRoute = PracticeAreasRouteImport.update({
+  id: '/practice-areas',
+  path: '/practice-areas',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -65,9 +59,8 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
-  '/projects': typeof ProjectsRoute
-  '/services': typeof ServicesRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
+  '/people': typeof PeopleRoute
+  '/practice-areas': typeof PracticeAreasRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,9 +68,8 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
-  '/projects': typeof ProjectsRoute
-  '/services': typeof ServicesRoute
-  '/projects/$slug': typeof ProjectsSlugRoute
+  '/people': typeof PeopleRoute
+  '/practice-areas': typeof PracticeAreasRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,9 +78,8 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
-  '/projects': typeof ProjectsRoute
-  '/services': typeof ServicesRoute
-  '/projects_/$slug': typeof ProjectsSlugRoute
+  '/people': typeof PeopleRoute
+  '/practice-areas': typeof PracticeAreasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -98,9 +89,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/contact'
-    | '/projects'
-    | '/services'
-    | '/projects/$slug'
+    | '/people'
+    | '/practice-areas'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -108,9 +98,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/contact'
-    | '/projects'
-    | '/services'
-    | '/projects/$slug'
+    | '/people'
+    | '/practice-areas'
   id:
     | '__root__'
     | '/'
@@ -118,9 +107,8 @@ export interface FileRouteTypes {
     | '/admin'
     | '/auth'
     | '/contact'
-    | '/projects'
-    | '/services'
-    | '/projects_/$slug'
+    | '/people'
+    | '/practice-areas'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -129,9 +117,8 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
-  ProjectsRoute: typeof ProjectsRoute
-  ServicesRoute: typeof ServicesRoute
-  ProjectsSlugRoute: typeof ProjectsSlugRoute
+  PeopleRoute: typeof PeopleRoute
+  PracticeAreasRoute: typeof PracticeAreasRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -171,25 +158,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
+    '/people': {
+      id: '/people'
+      path: '/people'
+      fullPath: '/people'
+      preLoaderRoute: typeof PeopleRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/services': {
-      id: '/services'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof ServicesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/projects_/$slug': {
-      id: '/projects_/$slug'
-      path: '/projects/$slug'
-      fullPath: '/projects/$slug'
-      preLoaderRoute: typeof ProjectsSlugRouteImport
+    '/practice-areas': {
+      id: '/practice-areas'
+      path: '/practice-areas'
+      fullPath: '/practice-areas'
+      preLoaderRoute: typeof PracticeAreasRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -201,9 +181,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
-  ProjectsRoute: ProjectsRoute,
-  ServicesRoute: ServicesRoute,
-  ProjectsSlugRoute: ProjectsSlugRoute,
+  PeopleRoute: PeopleRoute,
+  PracticeAreasRoute: PracticeAreasRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
