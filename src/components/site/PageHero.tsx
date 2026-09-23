@@ -1,53 +1,69 @@
 import { Link } from "@tanstack/react-router";
 
-import markLight from "@/assets/brand/mark-light.webp";
-
 /**
- * The band every inner page opens on. Typographic rather than photographic:
- * there is no stock photography anywhere on this site, and a black ground with
- * the mark ghosted into the corner carries a page better than a picture of a
- * courthouse nobody in the firm has been to.
+ * The band every inner page opens on: a pale blush ground, the crumb, and the
+ * title set large. Pale rather than black, because the page below it is pale
+ * and a dark cap made every inner page look like the same page.
+ *
+ * `image` is a wide photograph printed full-bleed directly under the band,
+ * which is where a page that has one wants it — under the sentence that
+ * introduces it, not behind the words.
  */
 export function PageHero({
   eyebrow,
   title,
   crumb,
   lead,
+  image,
+  imageAlt,
 }: {
   eyebrow: string;
   title: string;
   crumb: string;
   /** Optional standfirst under the title. */
   lead?: string;
+  image?: string;
+  imageAlt?: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-ink pb-24 pt-40 text-ink-foreground md:pb-32 md:pt-52">
-      <div className="pointer-events-none absolute inset-0 rule-grid-dark" />
-      <div className="pointer-events-none absolute inset-0 hero-glow opacity-70" />
-      <img
-        src={markLight}
-        alt=""
-        aria-hidden="true"
-        width={354}
-        height={280}
-        className="pointer-events-none absolute -right-10 top-1/2 hidden h-[22rem] w-auto -translate-y-1/2 opacity-[0.07] lg:block"
-      />
-      <div className="relative mx-auto max-w-[92rem] px-5 md:px-10">
-        <p className="eyebrow text-accent-ink">{eyebrow}</p>
-        <h1 className="mt-6 max-w-4xl font-display text-[2.6rem] leading-[1.05] md:text-7xl">
-          {title}
-        </h1>
-        {lead ? (
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-ink-foreground/70">{lead}</p>
-        ) : null}
-        <p className="mt-10 flex items-center gap-3 eyebrow text-ink-foreground/50">
-          <Link to="/" className="transition-colors hover:text-accent-ink">
-            Home
-          </Link>
-          <span className="h-1.5 w-1.5 rotate-45 bg-accent-ink/70" />
-          {crumb}
-        </p>
-      </div>
-    </section>
+    <>
+      <section className="relative border-b border-border bg-accent-wash pb-16 pt-32 md:pb-20 md:pt-44">
+        <div className="relative mx-auto max-w-[92rem] px-5 md:px-10">
+          <p className="flex items-center gap-3 eyebrow text-muted-foreground">
+            <Link to="/" className="transition-colors hover:text-accent">
+              Home
+            </Link>
+            <span className="h-1.5 w-1.5 rotate-45 bg-accent" aria-hidden="true" />
+            <span className="text-foreground">{crumb}</span>
+          </p>
+
+          <div className="mt-12 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
+            <div>
+              <p className="eyebrow text-accent">{eyebrow}</p>
+              <h1 className="mt-6 max-w-3xl font-display text-[2.6rem] leading-[1.05] md:text-[4.25rem]">
+                {title}
+              </h1>
+            </div>
+            {lead ? (
+              <p className="max-w-xl border-l-2 border-accent pl-6 text-lg leading-relaxed text-muted-foreground lg:pb-3">
+                {lead}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      {image ? (
+        <div className="relative border-b border-border">
+          <img
+            src={image}
+            alt={imageAlt ?? ""}
+            width={1344}
+            height={576}
+            className="h-[16rem] w-full object-cover md:h-[26rem]"
+          />
+        </div>
+      ) : null}
+    </>
   );
 }

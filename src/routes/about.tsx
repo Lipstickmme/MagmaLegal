@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 
 import lockupDark from "@/assets/brand/lockup-dark.webp";
+import teamLibrary from "@/assets/photos/team-library.webp";
 import { FrameReveal } from "@/components/site/FrameReveal";
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
@@ -15,13 +16,10 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "A commercial practice of 22 practitioners across Lagos, Abuja and Port Harcourt, organised so the partner who takes your call keeps the file.",
+          "A commercial practice of 22 practitioners, organised so the partner who takes your call keeps the file.",
       },
       { property: "og:title", content: "The Firm. Magma Legal Practitioners" },
-      {
-        property: "og:description",
-        content: "Who we are, how we work, and what we will not do.",
-      },
+      { property: "og:description", content: "Who we are, how we work, and what we will not do." },
     ],
   }),
   component: About,
@@ -46,14 +44,11 @@ const VALUES = [
 ];
 
 const TIMELINE = [
-  {
-    year: "2012",
-    text: "The practice opens in Lagos with two partners and a commercial caseload.",
-  },
+  { year: "2012", text: "The practice opens with two partners and a commercial caseload." },
   { year: "2015", text: "First arbitration mandate; the disputes group is formed around it." },
-  { year: "2018", text: "Abuja office opens to serve regulatory and public-sector work." },
+  { year: "2018", text: "A regulatory practice is built out for licensing and investigations." },
   { year: "2021", text: "Energy and natural resources becomes a standalone practice area." },
-  { year: "2024", text: "Port Harcourt office opens; the firm passes twenty practitioners." },
+  { year: "2024", text: "The firm passes twenty practitioners across three practice groups." },
 ];
 
 function About() {
@@ -63,35 +58,21 @@ function About() {
         eyebrow="The firm"
         title="Built to be answerable"
         crumb="The Firm"
-        lead="Twenty-two practitioners across three offices, arranged so that the person who understands your matter is the person you can reach."
+        lead="Twenty-two practitioners, arranged so that the person who understands your matter is the person you can reach."
+        image={teamLibrary}
+        imageAlt="Members of the firm in the library"
       />
 
       {/* Approach, alongside the mark */}
-      <section className="relative bg-background py-24 md:py-32">
-        <div className="pointer-events-none absolute inset-0 rule-grid opacity-60" />
-        <div className="relative mx-auto grid max-w-[92rem] gap-16 px-5 md:px-10 lg:grid-cols-2 lg:items-center">
-          <FrameReveal className="border border-border bg-card p-10 md:p-16">
-            <img
-              src={lockupDark}
-              alt={SITE.name}
-              width={872}
-              height={666}
-              className="mx-auto w-full max-w-md"
-            />
-            <p className="mt-12 border-t border-border pt-6 text-sm leading-relaxed text-muted-foreground">
-              The mark is a set of scales hung from a fluted pillar: the balance a matter is weighed
-              in, carried by the thing that has to hold it up. The crimson is deliberate — the pans
-              are where the weight lands.
-            </p>
-          </FrameReveal>
-
-          <Reveal delay={120} className="lg:pl-6">
-            <p className="eyebrow draw-rule draw-rule-in text-accent">Our approach</p>
+      <section className="bg-background py-20 md:py-28">
+        <div className="mx-auto grid max-w-[92rem] gap-14 px-5 md:px-10 lg:grid-cols-2 lg:items-center lg:gap-20">
+          <Reveal>
+            <p className="eyebrow text-accent">Our approach</p>
             <WordRise
               text="We would rather be exact than reassuring"
-              className="mt-8 text-4xl leading-[1.1] md:text-5xl"
+              className="mt-6 text-4xl leading-[1.1] md:text-5xl"
             />
-            <p className="mt-10 text-lg leading-relaxed text-muted-foreground">
+            <p className="mt-9 text-lg leading-relaxed text-muted-foreground">
               {SITE.name} advises companies, lenders, founders and private clients. The work divides
               between transactions, regulatory matters and disputes, and we keep all three in the
               same rooms on purpose: a contract drafted by someone who has litigated one is a
@@ -103,39 +84,48 @@ function About() {
               quote a fee basis before we begin, and we tell you when a matter no longer justifies
               the cost of fighting it.
             </p>
-
-            <Reveal delay={200}>
-              <Link
-                to="/people"
-                className="eyebrow link-underline mt-12 inline-flex items-center gap-3 text-accent"
-              >
-                Meet the practitioners
-                <ArrowUpRight size={15} strokeWidth={1.5} />
-              </Link>
-            </Reveal>
+            <Link
+              to="/people"
+              className="eyebrow link-underline mt-10 inline-flex items-center gap-3 text-accent"
+            >
+              Meet the practitioners
+              <ArrowUpRight size={15} strokeWidth={1.5} />
+            </Link>
           </Reveal>
+
+          <FrameReveal className="border border-border bg-card p-10 md:p-14">
+            <img
+              src={lockupDark}
+              alt={SITE.name}
+              width={872}
+              height={666}
+              loading="lazy"
+              className="mx-auto w-full max-w-sm"
+            />
+            <p className="mt-12 border-t border-border pt-6 text-sm leading-relaxed text-muted-foreground">
+              The mark is a set of scales hung from a fluted pillar: the balance a matter is weighed
+              in, carried by the thing that has to hold it up. The crimson is deliberate — the pans
+              are where the weight lands.
+            </p>
+          </FrameReveal>
         </div>
       </section>
 
       {/* Values */}
-      <section className="bg-secondary py-24 md:py-32">
+      <section className="border-y border-border bg-accent-wash py-20 md:py-28">
         <div className="mx-auto max-w-[92rem] px-5 md:px-10">
           <Reveal>
-            <p className="eyebrow draw-rule draw-rule-in text-accent">What we hold to</p>
+            <p className="eyebrow text-accent">What we hold to</p>
             <WordRise
               text="Three commitments, in writing"
-              className="mt-8 text-4xl leading-[1.1] md:text-5xl"
+              className="mt-5 text-4xl leading-[1.1] md:text-5xl"
             />
           </Reveal>
-          <div className="mt-16 grid gap-10 md:grid-cols-3">
+          <div className="mt-14 grid gap-px bg-border md:grid-cols-3">
             {VALUES.map((value, index) => (
-              <Reveal
-                key={value.n}
-                delay={index * 110}
-                className="border-t border-foreground/20 pt-8"
-              >
-                <p className="eyebrow draw-rule draw-rule-in text-accent">{value.n}</p>
-                <h3 className="mt-7 text-2xl">{value.title}</h3>
+              <Reveal key={value.n} delay={index * 100} className="bg-accent-wash p-8 md:p-10">
+                <p className="eyebrow text-accent">{value.n}</p>
+                <h2 className="mt-6 text-2xl">{value.title}</h2>
                 <p className="mt-4 leading-relaxed text-muted-foreground">{value.body}</p>
               </Reveal>
             ))}
@@ -143,28 +133,43 @@ function About() {
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="bg-background py-24 md:py-32">
+      {/* History, on a spine */}
+      <section className="bg-background py-20 md:py-28">
         <div className="mx-auto max-w-[92rem] px-5 md:px-10">
           <Reveal>
-            <p className="eyebrow draw-rule draw-rule-in text-accent">History</p>
+            <p className="eyebrow text-accent">History</p>
             <WordRise
               text="How the firm grew"
-              className="mt-8 text-4xl leading-[1.1] md:text-5xl"
+              className="mt-5 text-4xl leading-[1.1] md:text-5xl"
             />
           </Reveal>
-          <div className="mt-14 border-t border-border">
+
+          <ol className="relative mt-14 max-w-4xl">
+            {/* The spine stops at the last node rather than running off the end. */}
+            <span
+              aria-hidden="true"
+              className="absolute bottom-10 left-[0.3rem] top-3 w-px bg-accent/25 md:left-[7.3rem]"
+            />
             {TIMELINE.map((entry, index) => (
               <Reveal
                 key={entry.year}
-                delay={index * 80}
-                className="grid gap-4 border-b border-border py-8 md:grid-cols-[10rem_1fr] md:py-10"
+                as="li"
+                delay={index * 70}
+                className="relative grid gap-2 pb-10 pl-8 md:grid-cols-[7rem_1fr] md:gap-10 md:pl-0"
               >
-                <p className="font-display text-3xl text-accent">{entry.year}</p>
-                <p className="max-w-2xl text-lg text-muted-foreground">{entry.text}</p>
+                <span
+                  aria-hidden="true"
+                  className="absolute left-0 top-[0.45rem] h-[0.7rem] w-[0.7rem] rotate-45 bg-accent md:left-[7rem]"
+                />
+                <p className="font-display text-2xl text-accent md:text-right md:text-3xl">
+                  {entry.year}
+                </p>
+                <p className="text-lg leading-relaxed text-muted-foreground md:pl-10">
+                  {entry.text}
+                </p>
               </Reveal>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
     </>

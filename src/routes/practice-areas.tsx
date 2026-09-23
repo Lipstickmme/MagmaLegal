@@ -51,27 +51,45 @@ function PracticeAreas() {
         lead="Transactional, regulatory and contentious work under one roof, which is why the lawyer drafting your agreement has argued the clause that goes wrong."
       />
 
-      <section className="relative bg-background py-24 md:py-32">
-        <div className="pointer-events-none absolute inset-0 rule-grid opacity-60" />
-        <div className="relative mx-auto max-w-[92rem] px-5 md:px-10">
+      <section className="bg-background py-16 md:py-24">
+        <div className="mx-auto grid max-w-[92rem] gap-12 px-5 md:px-10 lg:grid-cols-[15rem_1fr] lg:gap-16">
+          {/* An index that stays on screen, so eight long sections do not mean
+              scrolling back to the top to reach the ninth thing you wanted. */}
+          <nav aria-label="Practice areas" className="lg:sticky lg:top-32 lg:self-start">
+            <p className="eyebrow border-b border-border pb-4 text-muted-foreground">Index</p>
+            <ol className="mt-5 space-y-3">
+              {PRACTICE_AREAS.map((area) => (
+                <li key={area.slug}>
+                  <a
+                    href={`#${area.slug}`}
+                    className="group flex gap-3 text-sm leading-snug text-muted-foreground transition-colors hover:text-accent"
+                  >
+                    <span className="eyebrow pt-0.5 text-accent/70">{area.n}</span>
+                    {area.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+
           <ul className="border-t border-border">
             {PRACTICE_AREAS.map((area, index) => (
               <Reveal
                 key={area.slug}
                 as="li"
                 id={area.slug}
-                delay={index * 60}
-                /* scroll-mt clears the fixed header when the home page cards
-                   link straight to one of these by hash. */
-                className="grid scroll-mt-28 gap-8 border-b border-border py-12 md:grid-cols-[1fr_1.4fr] md:gap-16 md:py-16"
+                delay={index * 40}
+                /* scroll-mt clears the fixed header when the index or a home
+                   page row links straight to one of these by hash. */
+                className="scroll-mt-28 border-b border-border py-12 md:py-14"
               >
-                <div>
-                  <p className="eyebrow draw-rule draw-rule-in text-accent">{area.n}</p>
-                  <h2 className="mt-7 text-3xl leading-tight md:text-4xl">{area.title}</h2>
+                <div className="flex items-baseline gap-5">
+                  <span className="eyebrow text-accent">{area.n}</span>
+                  <h2 className="text-3xl leading-tight md:text-4xl">{area.title}</h2>
                 </div>
-                <div>
+                <div className="mt-7 grid gap-8 md:grid-cols-[1.1fr_1fr] md:gap-14">
                   <p className="text-lg leading-relaxed text-muted-foreground">{area.body}</p>
-                  <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+                  <ul className="grid gap-3 self-start border-l border-border pl-8">
                     {area.work.map((item) => (
                       <li key={item} className="flex items-start gap-3 text-sm">
                         <Check
@@ -92,39 +110,40 @@ function PracticeAreas() {
       </section>
 
       {/* Fees */}
-      <section className="relative overflow-hidden bg-ink py-24 text-ink-foreground md:py-32">
-        <div className="pointer-events-none absolute inset-0 rule-grid-dark" />
-        <div className="relative mx-auto max-w-[92rem] px-5 md:px-10">
-          <Reveal>
-            <p className="eyebrow text-accent-ink">Fees</p>
+      <section className="border-y border-border bg-accent-wash py-20 md:py-28">
+        <div className="mx-auto max-w-[92rem] px-5 md:px-10">
+          <Reveal className="max-w-3xl">
+            <p className="eyebrow text-accent">Fees</p>
             <WordRise
               text="You will know the basis before we begin"
-              className="mt-8 max-w-3xl text-4xl leading-[1.1] md:text-5xl"
+              className="mt-5 text-4xl leading-[1.1] md:text-5xl"
             />
-            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-ink-foreground/65">
+            <p className="mt-7 text-lg leading-relaxed text-muted-foreground">
               Every engagement starts with a letter setting out the scope, the fee basis and who is
               doing the work. No file moves without it.
             </p>
           </Reveal>
-          <div className="mt-16 grid gap-10 md:grid-cols-3">
+
+          <div className="mt-14 grid gap-px bg-border md:grid-cols-3">
             {FEES.map((fee, index) => (
-              <Reveal
-                key={fee.title}
-                delay={index * 110}
-                className="border-t border-ink-foreground/25 pt-8"
-              >
+              <Reveal key={fee.title} delay={index * 100} className="bg-card p-8 md:p-10">
                 <h3 className="text-2xl">{fee.title}</h3>
-                <p className="mt-4 leading-relaxed text-ink-foreground/65">{fee.body}</p>
+                <p className="mt-4 leading-relaxed text-muted-foreground">{fee.body}</p>
               </Reveal>
             ))}
           </div>
-          <Reveal delay={220}>
+
+          <Reveal delay={200}>
             <Link
               to="/contact"
-              className="eyebrow mt-16 inline-flex items-center gap-4 border border-ink-foreground/40 px-9 py-4 transition-colors hover:border-accent-ink hover:text-accent-ink"
+              className="group eyebrow mt-14 inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground transition-colors hover:bg-accent"
             >
               Ask for a fee estimate
-              <ArrowUpRight size={16} strokeWidth={1.4} />
+              <ArrowUpRight
+                size={16}
+                strokeWidth={1.4}
+                className="transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
+              />
             </Link>
           </Reveal>
         </div>

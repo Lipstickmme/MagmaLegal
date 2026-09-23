@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { ArrowUpRight, ShieldAlert } from "lucide-react";
+import { ArrowUpRight, Clock, Mail, Phone, ShieldAlert } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { useSiteSettings } from "@/components/site/SiteSettingsContext";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import type { SubmitFormInput } from "@/lib/api/forms";
-import { contactDetails, telHref } from "@/lib/site";
+import { telHref } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -15,13 +15,12 @@ export const Route = createFileRoute("/contact")({
       { title: "Contact. Magma Legal Practitioners" },
       {
         name: "description",
-        content:
-          "Send us the matter, or book an hour with a partner. Offices in Lagos, Abuja and Port Harcourt.",
+        content: "Call us, send us the matter, or book an hour with a partner.",
       },
       { property: "og:title", content: "Contact Magma Legal Practitioners" },
       {
         property: "og:description",
-        content: "Three offices. Tell us what has happened and where it stands.",
+        content: "Tell us what has happened and where it stands.",
       },
     ],
   }),
@@ -69,7 +68,7 @@ function Honeypot({
 /** Said once, above both forms: nothing sent through here is privileged. */
 function PrivilegeNotice() {
   return (
-    <p className="mt-10 flex gap-4 border border-border bg-secondary p-5 text-sm leading-relaxed text-muted-foreground">
+    <p className="mt-10 flex gap-4 border-l-2 border-accent bg-accent-wash p-6 text-sm leading-relaxed text-muted-foreground">
       <ShieldAlert
         size={18}
         strokeWidth={1.5}
@@ -87,7 +86,6 @@ function PrivilegeNotice() {
 
 function Contact() {
   const settings = useSiteSettings();
-  const details = contactDetails(settings);
 
   return (
     <>
@@ -95,56 +93,73 @@ function Contact() {
         eyebrow="Get in touch"
         title="Tell us what has happened"
         crumb="Contact"
-        lead="The facts, the dates and where it currently stands are enough to start. We read everything ourselves and reply within a working day."
+        lead="Call, write, or book an hour. We read everything ourselves and reply within a working day."
       />
 
-      <section className="relative bg-background py-24 md:py-32">
-        <div className="pointer-events-none absolute inset-0 rule-grid opacity-60" />
-        <div className="relative mx-auto grid max-w-[92rem] gap-16 px-5 md:px-10 lg:grid-cols-[1fr_1.15fr]">
-          <Reveal>
-            <p className="eyebrow draw-rule draw-rule-in text-accent">Chambers details</p>
-            <dl className="mt-10 space-y-9">
-              {details.map((detail) => (
-                <div key={detail.label} className="border-b border-border pb-6">
-                  <dt className="eyebrow text-muted-foreground">{detail.label}</dt>
-                  <dd className="mt-3 text-lg">
-                    {detail.label === "Email Address" ? (
-                      <a
-                        href={`mailto:${detail.value}`}
-                        className="link-underline transition-colors hover:text-accent"
-                      >
-                        {detail.value}
-                      </a>
-                    ) : (
-                      detail.value
-                    )}
-                  </dd>
-                </div>
-              ))}
-            </dl>
+      {/* Three ways in, before anything asks you to fill in a form. The rules
+          between them are grid gaps showing the border colour through, so the
+          padding has to sit outside the grid or it prints two grey margins. */}
+      <section className="border-b border-border bg-background">
+        <div className="mx-auto max-w-[92rem] px-5 md:px-10">
+          <div className="grid gap-px bg-border md:grid-cols-3">
+            <Reveal className="bg-background p-8 md:p-10">
+              <p className="flex items-center gap-3 eyebrow text-accent">
+                <Phone size={15} strokeWidth={1.8} aria-hidden="true" />
+                Telephone
+              </p>
+              <a
+                href={telHref(settings.phone)}
+                className="mt-5 block font-display text-2xl transition-colors hover:text-accent md:text-3xl"
+              >
+                {settings.phone}
+              </a>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Reception takes a note if everyone is on a call.
+              </p>
+            </Reveal>
 
-            <p className="eyebrow draw-rule draw-rule-in mt-16 text-accent">Offices</p>
-            <ul className="mt-10 space-y-9">
-              {settings.offices.map((office) => (
-                <li
-                  key={`${office.label}-${office.address}`}
-                  className="border-b border-border pb-6"
-                >
-                  <p className="font-display text-2xl">{office.label}</p>
-                  <address className="mt-3 text-base leading-relaxed text-muted-foreground not-italic">
-                    {office.address}
-                  </address>
-                  {office.phone ? (
-                    <a
-                      href={telHref(office.phone)}
-                      className="link-underline -mx-1 mt-2 inline-block px-1 py-1.5 text-base transition-colors hover:text-accent"
-                    >
-                      {office.phone}
-                    </a>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
+            <Reveal delay={80} className="bg-background p-8 md:p-10">
+              <p className="flex items-center gap-3 eyebrow text-accent">
+                <Mail size={15} strokeWidth={1.8} aria-hidden="true" />
+                Email
+              </p>
+              <a
+                href={`mailto:${settings.email}`}
+                className="mt-5 block font-display text-2xl transition-colors hover:text-accent md:text-3xl"
+              >
+                {settings.email}
+              </a>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Read by a partner, not by an inbox nobody owns.
+              </p>
+            </Reveal>
+
+            <Reveal delay={160} className="bg-background p-8 md:p-10">
+              <p className="flex items-center gap-3 eyebrow text-accent">
+                <Clock size={15} strokeWidth={1.8} aria-hidden="true" />
+                Office hours
+              </p>
+              <p className="mt-5 font-display text-2xl md:text-3xl">{settings.hours}</p>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Urgent applications are covered outside them.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-background py-20 md:py-28">
+        <div className="relative mx-auto grid max-w-[92rem] gap-14 px-5 md:px-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+          <Reveal>
+            <p className="eyebrow text-accent">New matter</p>
+            <h2 className="mt-5 font-display text-4xl leading-[1.1] md:text-5xl">
+              Send us the facts and the dates.
+            </h2>
+            <p className="mt-7 leading-relaxed text-muted-foreground">
+              Enough to identify the matter and run a conflicts check is enough to start. A partner
+              replies within a working day.
+            </p>
+            <PrivilegeNotice />
           </Reveal>
 
           <Reveal delay={120}>
@@ -153,16 +168,16 @@ function Contact() {
         </div>
       </section>
 
-      <section className="border-t border-border bg-secondary py-24 md:py-32">
-        <div className="mx-auto grid max-w-[92rem] gap-16 px-5 md:px-10 lg:grid-cols-[1fr_1.15fr]">
+      <section className="border-t border-border bg-accent-wash py-20 md:py-28">
+        <div className="mx-auto grid max-w-[92rem] gap-14 px-5 md:px-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <Reveal>
-            <p className="eyebrow draw-rule draw-rule-in text-accent">Book a consultation</p>
-            <h2 className="mt-8 font-display text-4xl leading-tight md:text-5xl">
+            <p className="eyebrow text-accent">Book a consultation</p>
+            <h2 className="mt-5 font-display text-4xl leading-[1.1] md:text-5xl">
               An hour with a partner, at a time that suits you.
             </h2>
-            <p className="mt-8 max-w-md leading-relaxed text-muted-foreground">
-              Pick a slot and we will confirm by email. Consultations run from any of the three
-              offices, at your premises, or by video — whichever is more useful at this stage.
+            <p className="mt-7 max-w-md leading-relaxed text-muted-foreground">
+              Pick a slot and we will confirm by email. Consultations run at our offices, at your
+              premises, or by video — whichever is more useful at this stage.
             </p>
             <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">
               Bring the contract, the correspondence and the dates. You will leave with a view of
@@ -208,8 +223,7 @@ function EnquiryForm() {
   if (form.success) {
     return (
       <div>
-        <p className="eyebrow draw-rule draw-rule-in text-accent">New matter</p>
-        <p className="mt-10 font-display text-3xl leading-snug">
+        <p className="font-display text-3xl leading-snug">
           Thank you, we have it. A partner will reply within a working day, after a conflicts check.
         </p>
         <button
@@ -224,112 +238,108 @@ function EnquiryForm() {
   }
 
   return (
-    <>
-      <p className="eyebrow draw-rule draw-rule-in text-accent">New matter</p>
-      <PrivilegeNotice />
-      <form onSubmit={form.onSubmit} className="relative mt-10 space-y-8">
-        <Honeypot
-          id="enquiry-website"
-          value={form.values.website}
-          onChange={(next) => form.setField("website", next)}
-        />
+    <form onSubmit={form.onSubmit} className="relative space-y-8">
+      <Honeypot
+        id="enquiry-website"
+        value={form.values.website}
+        onChange={(next) => form.setField("website", next)}
+      />
 
-        <div className="grid gap-8 sm:grid-cols-2">
-          <div>
-            <label htmlFor="name" className="eyebrow text-muted-foreground">
-              Your name
-            </label>
-            <input
-              id="name"
-              required
-              maxLength={200}
-              value={form.values.name}
-              onChange={(event) => form.setField("name", event.target.value)}
-              className={fieldClass}
-            />
-          </div>
-          <div>
-            <label htmlFor="company" className="eyebrow text-muted-foreground">
-              Company (optional)
-            </label>
-            <input
-              id="company"
-              maxLength={200}
-              value={form.values.company}
-              onChange={(event) => form.setField("company", event.target.value)}
-              className={fieldClass}
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="eyebrow text-muted-foreground">
-              Email address
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              maxLength={320}
-              value={form.values.email}
-              onChange={(event) => form.setField("email", event.target.value)}
-              className={fieldClass}
-            />
-          </div>
-          <div>
-            <label htmlFor="phone" className="eyebrow text-muted-foreground">
-              Phone (optional)
-            </label>
-            <input
-              id="phone"
-              type="tel"
-              maxLength={60}
-              value={form.values.phone}
-              onChange={(event) => form.setField("phone", event.target.value)}
-              className={fieldClass}
-            />
-          </div>
-        </div>
-
+      <div className="grid gap-8 sm:grid-cols-2">
         <div>
-          <label htmlFor="subject" className="eyebrow text-muted-foreground">
-            Nature of the matter
+          <label htmlFor="name" className="eyebrow text-muted-foreground">
+            Your name
           </label>
           <input
-            id="subject"
-            maxLength={300}
-            placeholder="Shareholder dispute, lease renewal, licence application…"
-            value={form.values.subject}
-            onChange={(event) => form.setField("subject", event.target.value)}
-            className={`${fieldClass} placeholder:text-muted-foreground/50 placeholder:text-base`}
-          />
-        </div>
-
-        <div>
-          <label htmlFor="scope" className="eyebrow text-muted-foreground">
-            What has happened so far
-          </label>
-          <textarea
-            id="scope"
-            rows={4}
+            id="name"
             required
-            maxLength={4000}
-            value={form.values.scope}
-            onChange={(event) => form.setField("scope", event.target.value)}
-            className={`${fieldClass} resize-none`}
+            maxLength={200}
+            value={form.values.name}
+            onChange={(event) => form.setField("name", event.target.value)}
+            className={fieldClass}
           />
         </div>
+        <div>
+          <label htmlFor="company" className="eyebrow text-muted-foreground">
+            Company (optional)
+          </label>
+          <input
+            id="company"
+            maxLength={200}
+            value={form.values.company}
+            onChange={(event) => form.setField("company", event.target.value)}
+            className={fieldClass}
+          />
+        </div>
+        <div>
+          <label htmlFor="email" className="eyebrow text-muted-foreground">
+            Email address
+          </label>
+          <input
+            id="email"
+            type="email"
+            required
+            maxLength={320}
+            value={form.values.email}
+            onChange={(event) => form.setField("email", event.target.value)}
+            className={fieldClass}
+          />
+        </div>
+        <div>
+          <label htmlFor="phone" className="eyebrow text-muted-foreground">
+            Phone (optional)
+          </label>
+          <input
+            id="phone"
+            type="tel"
+            maxLength={60}
+            value={form.values.phone}
+            onChange={(event) => form.setField("phone", event.target.value)}
+            className={fieldClass}
+          />
+        </div>
+      </div>
 
-        {form.error ? <p className="text-sm text-destructive">{form.error}</p> : null}
+      <div>
+        <label htmlFor="subject" className="eyebrow text-muted-foreground">
+          Nature of the matter
+        </label>
+        <input
+          id="subject"
+          maxLength={300}
+          placeholder="Shareholder dispute, lease renewal, licence application…"
+          value={form.values.subject}
+          onChange={(event) => form.setField("subject", event.target.value)}
+          className={`${fieldClass} placeholder:text-muted-foreground/50 placeholder:text-base`}
+        />
+      </div>
 
-        <button
-          type="submit"
-          disabled={form.submitting}
-          className="eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-40"
-        >
-          {form.submitting ? "Sending…" : "Send enquiry"}
-          <ArrowUpRight size={16} strokeWidth={1.5} />
-        </button>
-      </form>
-    </>
+      <div>
+        <label htmlFor="scope" className="eyebrow text-muted-foreground">
+          What has happened so far
+        </label>
+        <textarea
+          id="scope"
+          rows={4}
+          required
+          maxLength={4000}
+          value={form.values.scope}
+          onChange={(event) => form.setField("scope", event.target.value)}
+          className={`${fieldClass} resize-none`}
+        />
+      </div>
+
+      {form.error ? <p className="text-sm text-destructive">{form.error}</p> : null}
+
+      <button
+        type="submit"
+        disabled={form.submitting}
+        className="eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-40"
+      >
+        {form.submitting ? "Sending…" : "Send enquiry"}
+        <ArrowUpRight size={16} strokeWidth={1.5} />
+      </button>
+    </form>
   );
 }
 

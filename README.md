@@ -6,20 +6,24 @@ form; `/admin` is a staff dashboard for everything that comes in.
 
 Five public pages:
 
-| Route             | What it is                                                           |
-| ----------------- | -------------------------------------------------------------------- |
-| `/`               | the lockup on black, the firm in short, practice areas, how we work  |
-| `/about`          | the firm, its approach, what it commits to, and its history          |
-| `/practice-areas` | all eight areas with the work under each, and how the firm charges   |
-| `/people`         | the practitioners, drawn as initials — there is no stock photography |
-| `/contact`        | contact details, the enquiry form and the consultation booking form  |
+| Route             | What it is                                                          |
+| ----------------- | ------------------------------------------------------------------- |
+| `/`               | the lockup on black, the firm in short, practice areas, how we work |
+| `/about`          | the firm, its approach, what it commits to, and its history         |
+| `/practice-areas` | all eight areas with the work under each, and how the firm charges  |
+| `/people`         | a partner's portrait, then the roster drawn as initials             |
+| `/contact`        | contact details, the enquiry form and the consultation booking form |
 
 `/admin` and `/auth` are the staff surfaces, and both are `noindex`.
 
+There is no street address anywhere on the site: the firm is reached by
+telephone and by email, both editable from `/admin` without a redeploy.
+
 > **Before launch, replace the placeholder content.** See
-> [Placeholder content](#placeholder-content) — the addresses, phone numbers,
-> the eight practitioner profiles and the four figures on the home page are all
-> invented, and publishing them as the firm's own would misrepresent it.
+> [Placeholder content](#placeholder-content) — the phone number, the four
+> photographs, the eight practitioner profiles and the figures on the home page
+> are all stand-ins, and publishing them as the firm's own would misrepresent
+> it.
 
 ## How it fits together
 
@@ -68,11 +72,12 @@ In the Supabase SQL editor, run in order:
 | `supabase/migrations/0002_email.sql`           | optional — only to receive mail through the inbound webhook |
 | `supabase/migrations/0003_site_settings.sql`   | the contact details the Settings tab edits                  |
 | `supabase/migrations/0004_site_address.sql`    | superseded by 0005; run it anyway, in order                 |
-| `supabase/migrations/0005_offices.sql`         | the firm's offices, one address and phone each              |
+| `supabase/migrations/0005_offices.sql`         | superseded by 0008; run it anyway, in order                 |
 | `supabase/migrations/0006_schema_report.sql`   | lets `/api/health` and `verify.sql` name anything missing   |
 | `supabase/migrations/0007_contact_details.sql` | only needed if 0003–0005 ran under the template's details   |
+| `supabase/migrations/0008_contact_phone.sql`   | the telephone number the site is reached on                 |
 
-All seven are guarded, atomic and re-runnable: applying them twice is a no-op,
+All eight are guarded, atomic and re-runnable: applying them twice is a no-op,
 not an error, and an edit made from the dashboard survives a re-run.
 
 The transaction around each one matters more than it looks. A policy is made
@@ -212,11 +217,18 @@ them needs a redeploy except the last two.
 
 | What                                  | Where                                   |
 | ------------------------------------- | --------------------------------------- |
-| Email, website, office hours          | /admin → Settings, or `src/lib/site.ts` |
-| Three office addresses and phones     | /admin → Settings, or `src/lib/site.ts` |
+| Telephone, email, hours, website      | /admin → Settings, or `src/lib/site.ts` |
+| The four photographs                  | `src/assets/photos/` — see below        |
 | Eight practitioner profiles           | `PEOPLE` in `src/routes/people.tsx`     |
 | "14 years / 600+ matters / 22 people" | `FIGURES` in `src/routes/index.tsx`     |
 | Firm history, 2012–2024               | `TIMELINE` in `src/routes/about.tsx`    |
+
+The four photographs in `src/assets/photos/` are stock imagery of people who do
+not work here. No name is printed against a face anywhere on the site, which is
+deliberate — swap them for the firm's own photography before launch, keeping the
+same filenames and roughly the same shapes (three at 1344×576, the portrait
+at 4:5). They are committed as WebP; `scripts/brand-assets.py` is for the logo,
+not for these.
 
 The practice areas in `src/lib/practice-areas.ts` are real areas of practice
 described generically; read them before publishing, because a firm that does not
@@ -401,8 +413,9 @@ src/
   start.ts                   global server-fn auth middleware + CSRF
   styles.css                 the palette, the type pairing and every utility
   assets/brand/              two masters + the four keyed artworks (see above)
+  assets/photos/             the four photographs, as WebP
   lib/
-    site.ts                  the firm's identity, offices and contact fallbacks
+    site.ts                  the firm's identity and contact fallbacks
     practice-areas.ts        the eight areas; the home page reads the first six
     public-config.ts         loadPublicConfig / setPublicConfig / isSupabaseConfigured
     supabase.ts              lazy Proxy around the browser client
