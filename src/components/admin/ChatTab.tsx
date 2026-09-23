@@ -154,7 +154,7 @@ function Conversation({ session, enabled }: { session: ChatSession; enabled: boo
           onChange={(event) => setDraft(event.target.value)}
           rows={2}
           maxLength={4000}
-          placeholder="Reply as chambers"
+          placeholder="Reply as the firm"
           aria-label="Reply"
           className="min-w-0 flex-1 resize-none border-b border-border bg-transparent px-1 py-2 text-sm outline-none transition-colors focus:border-accent"
         />

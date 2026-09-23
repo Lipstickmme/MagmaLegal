@@ -36,8 +36,8 @@ function AuthPage() {
         <p className="eyebrow text-accent">{SITE.name}</p>
         <h1 className="mt-4 font-display text-4xl">Staff sign in</h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          For the chambers dashboard. Visitors do not need an account, the chat widget signs itself
-          in anonymously.
+          For the firm dashboard. Visitors do not need an account, the chat widget signs itself in
+          anonymously.
         </p>
 
         <form onSubmit={onSubmit} className="mt-10 space-y-8">

@@ -112,10 +112,10 @@ const delivery = (over: Record<string, unknown> = {}) =>
     data: {
       email_id: "re_inbound_1",
       from: "Someone Outside <someone@example.com>",
-      to: ["chambers@magmalegal.com"],
+      to: ["contact@magmalegal.com"],
       subject: "Re: A question about a matter",
-      text: "Are you taking new instructions in Lagos?",
-      html: "<p>Are you taking new instructions in Lagos?</p>",
+      text: "Are you taking on new clients in Texas?",
+      html: "<p>Are you taking on new clients in Texas?</p>",
       headers: [
         { name: "Message-Id", value: "<abc123@mail.example.com>" },
         { name: "Subject", value: "Re: A question about a matter" },
@@ -164,7 +164,7 @@ console.log("\n1. A correctly signed delivery is filed\n");
   );
   ok(
     "records who it was sent to",
-    m?.to_email === "chambers@magmalegal.com",
+    m?.to_email === "contact@magmalegal.com",
     JSON.stringify(m?.to_email),
   );
   ok(
@@ -172,7 +172,7 @@ console.log("\n1. A correctly signed delivery is filed\n");
     m?.subject === "Re: A question about a matter",
     JSON.stringify(m?.subject),
   );
-  ok("carries the body", m?.body_text?.includes("Lagos"), JSON.stringify(m?.body_text));
+  ok("carries the body", m?.body_text?.includes("Texas"), JSON.stringify(m?.body_text));
 }
 
 console.log("\n2. A retry of the same delivery is not filed twice\n");
@@ -218,7 +218,7 @@ console.log("\n3. Deliveries that are dropped, and why\n");
     type: "email.inbound",
     data: {
       from: "Someone Outside <someone@example.com>",
-      to: ["chambers@magmalegal.com"],
+      to: ["contact@magmalegal.com"],
       subject: "HI",
       text: "a real message",
       headers: [{ name: "Message-Id", value: "<x@y>" }],
@@ -267,7 +267,7 @@ console.log("\n3b. Our own notification mail, looping back in\n");
     data: {
       email_id: "re_loop",
       from: "Magma Legal Practitioners <no-reply@magmalegal.com>",
-      to: ["chambers@magmalegal.com"],
+      to: ["contact@magmalegal.com"],
       subject: "New chat message from holly",
       text: "A visitor has started a chat.",
       headers: [{ name: "Message-Id", value: "<loop@x>" }],
@@ -308,9 +308,9 @@ console.log("\n3c. The real inbound payload: envelope only, body behind email_id
       email_id: "eeabb2a7-1602-47da-bf27-4835375a8d96",
       from: "mfckr.eth@gmail.com",
       message_id: "<CALcXggntvCxvKsuPF4XsdyJcG9XyU6oZj9ecR9Scz4=S7XiUXQ@mail.gmail.com>",
-      received_for: ["chambers@magmalegal.com"],
+      received_for: ["contact@magmalegal.com"],
       subject: "Re: 1",
-      to: ["chambers@magmalegal.com"],
+      to: ["contact@magmalegal.com"],
     },
   });
 

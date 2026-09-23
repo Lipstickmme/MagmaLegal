@@ -1,4 +1,4 @@
-# Magma Legal Practitioners — site, live chat and chambers dashboard
+# Magma Legal Practitioners — site, live chat and firm dashboard
 
 A TanStack Start (SSR) app on Vercel, backed by Supabase and Resend. The public
 site carries a visitor chat widget, an enquiry form and a consultation booking
@@ -9,21 +9,21 @@ Five public pages:
 | Route             | What it is                                                          |
 | ----------------- | ------------------------------------------------------------------- |
 | `/`               | the lockup on black, the firm in short, practice areas, how we work |
-| `/about`          | the firm, its approach, what it commits to, and its history         |
+| `/about`          | the firm, its approach, and what it commits to                      |
 | `/practice-areas` | all eight areas with the work under each, and how the firm charges  |
 | `/people`         | a partner's portrait, then the roster drawn as initials             |
 | `/contact`        | contact details, the enquiry form and the consultation booking form |
 
 `/admin` and `/auth` are the staff surfaces, and both are `noindex`.
 
-There is no street address anywhere on the site: the firm is reached by
-telephone and by email, both editable from `/admin` without a redeploy.
+There is no street address and no telephone number anywhere on the site: the
+firm is reached by email, the two contact forms and live chat. The email address
+and office hours are editable from `/admin` without a redeploy.
 
 > **Before launch, replace the placeholder content.** See
-> [Placeholder content](#placeholder-content) — the phone number, the four
-> photographs, the eight practitioner profiles and the figures on the home page
-> are all stand-ins, and publishing them as the firm's own would misrepresent
-> it.
+> [Placeholder content](#placeholder-content) — the email address, the four
+> photographs, the eight attorney profiles and the figures on the home page are
+> all stand-ins, and publishing them as the firm's own would misrepresent it.
 
 ## How it fits together
 
@@ -46,9 +46,12 @@ Five rules drive the rest of the design.
    `SUPABASE_URL`, `VITE_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_URL` are
    accepted as equivalent (and the same for the anon key), so connecting
    Vercel's Supabase integration is enough on its own.
-5. **Missing configuration is never silent.** The page renders a notice naming
-   exactly which variables are unset and where to set them, and `/api/health`
-   prints what the running server can actually see.
+5. **Missing configuration is silent to visitors, loud to staff.** A deployment
+   without Supabase is a working brochure site: no banner, and no chat launcher
+   for a chat that cannot connect, and a form submitted anyway gets a polite
+   "please email us" while the real reason goes to the server log. What is
+   missing is reported where staff look — `/api/health` names every unset
+   variable, and `/admin` and `/auth` say why they are switched off.
 
 ## Setup
 
@@ -71,13 +74,12 @@ In the Supabase SQL editor, run in order:
 | `supabase/migrations/0001_init.sql`            | everything: admins, enquiries, bookings, chat               |
 | `supabase/migrations/0002_email.sql`           | optional — only to receive mail through the inbound webhook |
 | `supabase/migrations/0003_site_settings.sql`   | the contact details the Settings tab edits                  |
-| `supabase/migrations/0004_site_address.sql`    | superseded by 0005; run it anyway, in order                 |
-| `supabase/migrations/0005_offices.sql`         | superseded by 0008; run it anyway, in order                 |
+| `supabase/migrations/0004_site_address.sql`    | an unused column; run it anyway, in order                   |
+| `supabase/migrations/0005_offices.sql`         | an unused column the schema report expects; run it          |
 | `supabase/migrations/0006_schema_report.sql`   | lets `/api/health` and `verify.sql` name anything missing   |
-| `supabase/migrations/0007_contact_details.sql` | only needed if 0003–0005 ran under the template's details   |
-| `supabase/migrations/0008_contact_phone.sql`   | the telephone number the site is reached on                 |
+| `supabase/migrations/0007_contact_details.sql` | a no-op on a fresh project; harmless to run                 |
 
-All eight are guarded, atomic and re-runnable: applying them twice is a no-op,
+All seven are guarded, atomic and re-runnable: applying them twice is a no-op,
 not an error, and an edit made from the dashboard survives a re-run.
 
 The transaction around each one matters more than it looks. A policy is made
@@ -212,16 +214,15 @@ starts being the wordmark. A master with different proportions needs it moved.
 
 ## Placeholder content
 
-Five things are invented and must be replaced before the site is public. None of
-them needs a redeploy except the last two.
+Four things are invented and must be replaced before the site is public. Only
+the first can change without a redeploy.
 
-| What                                  | Where                                   |
-| ------------------------------------- | --------------------------------------- |
-| Telephone, email, hours, website      | /admin → Settings, or `src/lib/site.ts` |
-| The four photographs                  | `src/assets/photos/` — see below        |
-| Eight practitioner profiles           | `PEOPLE` in `src/routes/people.tsx`     |
-| "14 years / 600+ matters / 22 people" | `FIGURES` in `src/routes/index.tsx`     |
-| Firm history, 2012–2024               | `TIMELINE` in `src/routes/about.tsx`    |
+| What                                     | Where                                   |
+| ---------------------------------------- | --------------------------------------- |
+| Email, office hours, website             | /admin → Settings, or `src/lib/site.ts` |
+| The four photographs                     | `src/assets/photos/` — see below        |
+| Eight attorney profiles                  | `PEOPLE` in `src/routes/people.tsx`     |
+| "22 attorneys / 14 years / 600+ matters" | `FIGURES` in `src/routes/index.tsx`     |
 
 The four photographs in `src/assets/photos/` are stock imagery of people who do
 not work here. No name is printed against a face anywhere on the site, which is
@@ -232,9 +233,10 @@ not for these.
 
 The practice areas in `src/lib/practice-areas.ts` are real areas of practice
 described generically; read them before publishing, because a firm that does not
-do energy work should not list it. The footer's disclaimer and the notice above
-the enquiry form are drafted for a jurisdiction that uses "solicitor"; the
-firm's own wording is the one that matters.
+do energy work should not list it. The footer's disclaimer, including its
+"Attorney Advertising" line, and the notice beside the enquiry form use standard
+US wording, but the rules differ by state: the firm's own counsel should settle
+the final text.
 
 ## Editable contact details
 

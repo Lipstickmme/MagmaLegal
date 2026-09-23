@@ -101,16 +101,16 @@ console.log("\n2. Address resolution with every variable set");
 {
   const m = await load({
     MAIL_DOMAIN: DOMAIN,
-    MAIL_FROM: `Magma Legal Practitioners <chambers@${DOMAIN}>`,
-    MAIL_REPLY_TO: `chambers@${DOMAIN}`,
+    MAIL_FROM: `Magma Legal Practitioners <contact@${DOMAIN}>`,
+    MAIL_REPLY_TO: `contact@${DOMAIN}`,
     MAIL_NOTIFY_TO: "someone@gmail.com",
   });
   ok(
     "MAIL_FROM override wins",
-    m.MAIL_FROM === `Magma Legal Practitioners <chambers@${DOMAIN}>`,
+    m.MAIL_FROM === `Magma Legal Practitioners <contact@${DOMAIN}>`,
     m.MAIL_FROM,
   );
-  ok("MAIL_REPLY_TO override wins", m.MAIL_REPLY_TO === `chambers@${DOMAIN}`, m.MAIL_REPLY_TO);
+  ok("MAIL_REPLY_TO override wins", m.MAIL_REPLY_TO === `contact@${DOMAIN}`, m.MAIL_REPLY_TO);
   ok("MAIL_NOTIFY_TO override wins", m.MAIL_NOTIFY_TO === "someone@gmail.com", m.MAIL_NOTIFY_TO);
 }
 {
@@ -329,7 +329,7 @@ console.log("\n8. What /api/health says about the webhook secret");
 
 console.log("\n9. The mail-loop trap");
 {
-  const m = await load({ MAIL_DOMAIN: DOMAIN, MAIL_NOTIFY_TO: `chambers@${DOMAIN}` });
+  const m = await load({ MAIL_DOMAIN: DOMAIN, MAIL_NOTIFY_TO: `contact@${DOMAIN}` });
   const loops = m.MAIL_NOTIFY_TO.endsWith("@" + m.MAIL_DOMAIN);
   console.log(
     `        MAIL_NOTIFY_TO=${m.MAIL_NOTIFY_TO} is on MAIL_DOMAIN: ${loops ? "YES, check it does not forward into /api/inbound-email" : "no"}`,

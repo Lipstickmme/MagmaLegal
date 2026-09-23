@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
-import { ArrowUpRight, Clock, Mail, Phone, ShieldAlert } from "lucide-react";
+import { ArrowDown, ArrowUpRight, CalendarCheck, Clock, Mail, ShieldAlert } from "lucide-react";
 
 import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { useSiteSettings } from "@/components/site/SiteSettingsContext";
+import { EmailText } from "@/components/site/EmailText";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import type { SubmitFormInput } from "@/lib/api/forms";
-import { telHref } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/contact")({
       { title: "Contact. Magma Legal Practitioners" },
       {
         name: "description",
-        content: "Call us, send us the matter, or book an hour with a partner.",
+        content: "Tell us about your matter, or book an hour with an attorney.",
       },
       { property: "og:title", content: "Contact Magma Legal Practitioners" },
       {
@@ -76,9 +76,9 @@ function PrivilegeNotice() {
         aria-hidden="true"
       />
       <span>
-        Writing to us does not create a solicitor–client relationship, and this form is not a
-        privileged channel. Send us enough to identify the matter and a conflicts check — not your
-        confidential documents. We will tell you where to send those once we can act.
+        Contacting us does not create an attorney–client relationship, and this form is not a
+        confidential channel. Send enough for us to identify the matter and run a conflict check —
+        not your confidential documents. We will tell you where to send those once we can act.
       </span>
     </p>
   );
@@ -93,7 +93,7 @@ function Contact() {
         eyebrow="Get in touch"
         title="Tell us what has happened"
         crumb="Contact"
-        lead="Call, write, or book an hour. We read everything ourselves and reply within a working day."
+        lead="Write to us, or book an hour. We read everything ourselves and reply within one business day."
       />
 
       {/* Three ways in, before anything asks you to fill in a form. The rules
@@ -101,47 +101,52 @@ function Contact() {
           padding has to sit outside the grid or it prints two grey margins. */}
       <section className="border-b border-border bg-background">
         <div className="mx-auto max-w-[92rem] px-5 md:px-10">
-          <div className="grid gap-px bg-border md:grid-cols-3">
+          <div className="grid gap-px bg-border lg:grid-cols-3">
             <Reveal className="bg-background p-8 md:p-10">
-              <p className="flex items-center gap-3 eyebrow text-accent">
-                <Phone size={15} strokeWidth={1.8} aria-hidden="true" />
-                Telephone
-              </p>
-              <a
-                href={telHref(settings.phone)}
-                className="mt-5 block font-display text-2xl transition-colors hover:text-accent md:text-3xl"
-              >
-                {settings.phone}
-              </a>
-              <p className="mt-3 text-sm text-muted-foreground">
-                Reception takes a note if everyone is on a call.
-              </p>
-            </Reveal>
-
-            <Reveal delay={80} className="bg-background p-8 md:p-10">
               <p className="flex items-center gap-3 eyebrow text-accent">
                 <Mail size={15} strokeWidth={1.8} aria-hidden="true" />
                 Email
               </p>
               <a
                 href={`mailto:${settings.email}`}
-                className="mt-5 block font-display text-2xl transition-colors hover:text-accent md:text-3xl"
+                className="link-underline mt-5 inline-block break-words font-display text-2xl transition-colors hover:text-accent lg:text-xl xl:text-2xl"
               >
-                {settings.email}
+                <EmailText address={settings.email} />
               </a>
               <p className="mt-3 text-sm text-muted-foreground">
-                Read by a partner, not by an inbox nobody owns.
+                Read by an attorney, not by an inbox nobody owns.
+              </p>
+            </Reveal>
+
+            <Reveal delay={80} className="bg-background p-8 md:p-10">
+              <p className="flex items-center gap-3 eyebrow text-accent">
+                <Clock size={15} strokeWidth={1.8} aria-hidden="true" />
+                Office hours
+              </p>
+              <p className="mt-5 font-display text-2xl lg:text-xl xl:text-2xl">{settings.hours}</p>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Emergency motions are covered outside them.
               </p>
             </Reveal>
 
             <Reveal delay={160} className="bg-background p-8 md:p-10">
               <p className="flex items-center gap-3 eyebrow text-accent">
-                <Clock size={15} strokeWidth={1.8} aria-hidden="true" />
-                Office hours
+                <CalendarCheck size={15} strokeWidth={1.8} aria-hidden="true" />
+                Consultation
               </p>
-              <p className="mt-5 font-display text-2xl md:text-3xl">{settings.hours}</p>
+              <a
+                href="#book"
+                className="group mt-5 inline-flex items-center gap-3 font-display text-2xl transition-colors hover:text-accent lg:text-xl xl:text-2xl"
+              >
+                Book an hour
+                <ArrowDown
+                  size={22}
+                  strokeWidth={1.4}
+                  className="transition-transform duration-500 group-hover:translate-y-1"
+                />
+              </a>
               <p className="mt-3 text-sm text-muted-foreground">
-                Urgent applications are covered outside them.
+                In person or by video, at a time that suits you.
               </p>
             </Reveal>
           </div>
@@ -156,8 +161,8 @@ function Contact() {
               Send us the facts and the dates.
             </h2>
             <p className="mt-7 leading-relaxed text-muted-foreground">
-              Enough to identify the matter and run a conflicts check is enough to start. A partner
-              replies within a working day.
+              Enough to identify the matter and run a conflict check is enough to start. An attorney
+              replies within one business day.
             </p>
             <PrivilegeNotice />
           </Reveal>
@@ -168,20 +173,23 @@ function Contact() {
         </div>
       </section>
 
-      <section className="border-t border-border bg-accent-wash py-20 md:py-28">
+      <section
+        id="book"
+        className="scroll-mt-28 border-t border-border bg-accent-wash py-20 md:py-28"
+      >
         <div className="mx-auto grid max-w-[92rem] gap-14 px-5 md:px-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
           <Reveal>
             <p className="eyebrow text-accent">Book a consultation</p>
             <h2 className="mt-5 font-display text-4xl leading-[1.1] md:text-5xl">
-              An hour with a partner, at a time that suits you.
+              An hour with an attorney, at a time that suits you.
             </h2>
             <p className="mt-7 max-w-md leading-relaxed text-muted-foreground">
-              Pick a slot and we will confirm by email. Consultations run at our offices, at your
-              premises, or by video — whichever is more useful at this stage.
+              Pick a time and we will confirm by email. Consultations are held at our office, at
+              yours, or by video — whichever is more useful at this stage.
             </p>
             <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground">
-              Bring the contract, the correspondence and the dates. You will leave with a view of
-              the options and what each would cost.
+              Bring the contract, the correspondence and the dates. You will leave knowing your
+              options and what each would cost.
             </p>
           </Reveal>
           <Reveal delay={120}>
@@ -224,7 +232,8 @@ function EnquiryForm() {
     return (
       <div>
         <p className="font-display text-3xl leading-snug">
-          Thank you, we have it. A partner will reply within a working day, after a conflicts check.
+          Thank you, we have it. An attorney will reply within one business day, after a conflict
+          check.
         </p>
         <button
           type="button"
@@ -307,7 +316,7 @@ function EnquiryForm() {
         <input
           id="subject"
           maxLength={300}
-          placeholder="Shareholder dispute, lease renewal, licence application…"
+          placeholder="Contract dispute, lease renewal, license application…"
           value={form.values.subject}
           onChange={(event) => form.setField("subject", event.target.value)}
           className={`${fieldClass} placeholder:text-muted-foreground/50 placeholder:text-base`}
@@ -334,9 +343,9 @@ function EnquiryForm() {
       <button
         type="submit"
         disabled={form.submitting}
-        className="eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-40"
+        className="btn-sweep eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground disabled:opacity-40"
       >
-        {form.submitting ? "Sending…" : "Send enquiry"}
+        {form.submitting ? "Sending…" : "Send inquiry"}
         <ArrowUpRight size={16} strokeWidth={1.5} />
       </button>
     </form>
@@ -503,7 +512,7 @@ function BookingForm() {
       <button
         type="submit"
         disabled={form.submitting}
-        className="eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-40"
+        className="btn-sweep eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground disabled:opacity-40"
       >
         {form.submitting ? "Booking…" : "Request booking"}
         <ArrowUpRight size={16} strokeWidth={1.5} />

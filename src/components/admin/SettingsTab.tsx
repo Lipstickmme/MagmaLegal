@@ -7,21 +7,15 @@ import { PanelError } from "./primitives";
 
 const FIELDS: { key: keyof SiteSettings; label: string; hint: string; type: string }[] = [
   {
-    key: "phone",
-    label: "Telephone",
-    hint: "Printed as you type it and dialled with the punctuation stripped. A (0) after the country code is dropped before dialling.",
-    type: "tel",
-  },
-  {
     key: "email",
     label: "Email address",
-    hint: "Shown in the footer, on the contact page and in the chat widget's fallback.",
+    hint: "Shown in the header, the footer, on the contact page and in the chat widget.",
     type: "email",
   },
   {
     key: "hours",
     label: "Office hours",
-    hint: "One line, printed beside the number.",
+    hint: "One line, printed beside the email address.",
     type: "text",
   },
   {
@@ -34,8 +28,6 @@ const FIELDS: { key: keyof SiteSettings; label: string; hint: string; type: stri
 
 const MISSING_TABLE =
   "Contact settings are not set up on this project. Apply supabase/migrations/0003_site_settings.sql, then reload.";
-const MISSING_PHONE =
-  "The phone column is not on this project yet. Apply supabase/migrations/0008_contact_phone.sql, then reload. Until then the site prints the built-in number.";
 
 /**
  * The contact block, editable. Writes straight to `site_settings` under the
@@ -54,8 +46,8 @@ export function SettingsTab({ enabled }: { enabled: boolean }) {
     let cancelled = false;
 
     void (async () => {
-      // `*`, not a column list: a project that has not run 0008 yet still
-      // returns its email, website and hours instead of failing outright.
+      // `*`, not a column list, so an older schema with extra columns (the
+      // template's addresses) or a missing one still loads what it can.
       const { data, error: loadError } = await supabase
         .from("site_settings")
         .select("*")
@@ -69,10 +61,8 @@ export function SettingsTab({ enabled }: { enabled: boolean }) {
         setValues({
           email: String(data["email"] ?? ""),
           website: String(data["website"] ?? ""),
-          phone: String(data["phone"] ?? DEFAULT_SITE_SETTINGS.phone),
           hours: String(data["hours"] ?? ""),
         });
-        if (!("phone" in data)) setError(MISSING_PHONE);
       }
       setLoading(false);
     })();
@@ -92,19 +82,11 @@ export function SettingsTab({ enabled }: { enabled: boolean }) {
     void (async () => {
       const { error: saveError } = await supabase
         .from("site_settings")
-        .update({
-          email: values.email,
-          website: values.website,
-          phone: values.phone,
-          hours: values.hours,
-        })
+        .update({ email: values.email, website: values.website, hours: values.hours })
         .eq("id", "default");
 
-      if (saveError) {
-        setError(/phone/.test(saveError.message) ? MISSING_PHONE : saveError.message);
-      } else {
-        setSaved(true);
-      }
+      if (saveError) setError(saveError.message);
+      else setSaved(true);
       setSaving(false);
     })();
   }
@@ -116,8 +98,8 @@ export function SettingsTab({ enabled }: { enabled: boolean }) {
       <PanelError message={error} />
 
       <p className="text-sm leading-relaxed text-muted-foreground">
-        These appear in the site footer and on the contact page. Changes go live on the next page
-        load, there is nothing to redeploy.
+        These appear across the site. Changes go live on the next page load, there is nothing to
+        redeploy.
       </p>
 
       <form onSubmit={onSubmit} className="space-y-8">

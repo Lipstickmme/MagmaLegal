@@ -30,7 +30,6 @@ export const loadSiteSettings = createServerFn({ method: "GET" }).handler(
       return {
         email: String(data["email"] ?? "") || DEFAULT_SITE_SETTINGS.email,
         website: String(data["website"] ?? "") || DEFAULT_SITE_SETTINGS.website,
-        phone: String(data["phone"] ?? "") || DEFAULT_SITE_SETTINGS.phone,
         hours: String(data["hours"] ?? "") || DEFAULT_SITE_SETTINGS.hours,
       };
     } catch {

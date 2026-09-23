@@ -1,23 +1,15 @@
--- 0004_site_address.sql — the office address, alongside the other editable
--- contact details. Guarded and re-runnable like the rest.
+-- 0004_site_address.sql — a single address column, now unused.
 --
--- Wrapped in a transaction on purpose. Every policy below is written as
--- `drop policy if exists` followed by `create policy`, which is the only way to
--- make a policy definition re-runnable, and it leaves a window: a run that stops
--- between the two, because the editor timed out or a later statement failed,
--- destroys a working policy and does not put it back. Re-running a migration to
--- repair the schema could then be what breaks it. Inside a transaction the run
--- either fully applies or changes nothing at all.
+-- The site prints no street address anywhere. This column is kept only so the
+-- numbered chain stays intact for a project that already ran it, and it is
+-- created empty. Guarded and re-runnable like the rest.
+--
+-- Wrapped in a transaction on purpose, like every migration here: a run either
+-- fully applies or changes nothing at all, so a failed run is safe to repeat.
 
 begin;
 
 alter table public.site_settings
-  add column if not exists address text not null
-  default 'Magma Chambers, 14 Idejo Street, Victoria Island, Lagos';
-
--- Fill the existing row if it predates the column.
-update public.site_settings
-   set address = 'Magma Chambers, 14 Idejo Street, Victoria Island, Lagos'
- where coalesce(address, '') = '';
+  add column if not exists address text not null default '';
 
 commit;

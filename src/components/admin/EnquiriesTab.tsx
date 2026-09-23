@@ -27,9 +27,9 @@ export function EnquiriesTab({ enabled }: { enabled: boolean }) {
       <ListDetail
         list={
           loading ? (
-            <EmptyState>Loading enquiries…</EmptyState>
+            <EmptyState>Loading inquiries…</EmptyState>
           ) : rows.length === 0 ? (
-            <EmptyState>No enquiries yet.</EmptyState>
+            <EmptyState>No inquiries yet.</EmptyState>
           ) : (
             rows.map((row) => (
               <ListRow
@@ -70,7 +70,7 @@ export function EnquiriesTab({ enabled }: { enabled: boolean }) {
               </dl>
             </div>
           ) : (
-            <EmptyState>Select an enquiry to read it.</EmptyState>
+            <EmptyState>Select an inquiry to read it.</EmptyState>
           )
         }
       />

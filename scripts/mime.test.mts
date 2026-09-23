@@ -26,10 +26,10 @@ console.log("\n1. A plain-text message\n");
     "Subject: HI",
     "Content-Type: text/plain; charset=utf-8",
     "",
-    "Are you taking new instructions in Lagos?",
+    "Are you taking on new clients in Texas?",
   ]);
   const out = parseMime(raw);
-  ok("finds the text", out.text === "Are you taking new instructions in Lagos?", out.text);
+  ok("finds the text", out.text === "Are you taking on new clients in Texas?", out.text);
   ok("no html", out.html === "");
 }
 

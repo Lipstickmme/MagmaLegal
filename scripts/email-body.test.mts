@@ -19,9 +19,9 @@ const ok = (name: string, cond: boolean, got = "") => {
 
 console.log("\n1. Turning an HTML email into something readable\n");
 {
-  const gmail = `<div dir="ltr">Hi there,<br><br>Are you taking new instructions in&nbsp;Lagos?<br><br>Thanks,<br>Someone</div>`;
+  const gmail = `<div dir="ltr">Hi there,<br><br>Are you taking on new clients in&nbsp;Texas?<br><br>Thanks,<br>Someone</div>`;
   const out = htmlToText(gmail);
-  ok("keeps the words", /Are you taking new instructions in Lagos\?/.test(out), out);
+  ok("keeps the words", /Are you taking on new clients in Texas\?/.test(out), out);
   ok("turns <br><br> into a paragraph break", /Hi there,\n\nAre you taking/.test(out), out);
   ok("decodes &nbsp;", !out.includes("&nbsp;"), out);
   console.log("        ->", JSON.stringify(out));

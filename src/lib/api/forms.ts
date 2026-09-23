@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+import { SITE } from "../site";
+
 // Form submissions never touch the database from the browser. `enquiries` and
 // `bookings` have no anon policy at all — this server function holds the
 // service-role key, so a leaked anon key cannot stuff the inbox.
@@ -24,7 +26,7 @@ const enquirySchema = z.object({
   email: trimmed(320).email("That does not look like an email address"),
   phone: optionalText(60),
   subject: optionalText(300),
-  scope: trimmed(4000).min(1, "Tell us a little about the project"),
+  scope: trimmed(4000).min(1, "Tell us a little about the matter"),
   website: honeypot,
 });
 
@@ -86,6 +88,16 @@ export const submitForm = createServerFn({ method: "POST" })
       return { ok: true, id: data.sessionId };
     }
 
+    // No database on this deployment yet. The raw reason names environment
+    // variables, which means nothing to a visitor and is not theirs to fix, so
+    // they get something they can act on and the real cause goes to the log.
+    if (!shared.SUPABASE_URL || !shared.SERVICE_ROLE_KEY) {
+      console.error(
+        `[forms] ${data.kind === "enquiry" ? "an inquiry" : "a booking"} was submitted, but Supabase is not configured on the server. See /api/health.`,
+      );
+      throw new Error(`We could not send this just now. Please email us at ${SITE.email}.`);
+    }
+
     const db = shared.adminClient();
 
     if (data.kind === "enquiry") {
@@ -102,11 +114,11 @@ export const submitForm = createServerFn({ method: "POST" })
         .select("id")
         .single();
 
-      if (error) throw new Error(`Could not save the enquiry: ${error.message}`);
+      if (error) throw new Error(`Could not save the inquiry: ${error.message}`);
 
       await notify(shared, {
-        subject: `New enquiry — ${data.subject || data.name}`,
-        heading: "New project enquiry",
+        subject: `New inquiry — ${data.subject || data.name}`,
+        heading: "New inquiry",
         rows: [
           ["Name", data.name],
           ["Company", data.company ?? ""],
@@ -116,7 +128,7 @@ export const submitForm = createServerFn({ method: "POST" })
           ["Brief", data.scope],
         ],
         replyTo: data.email,
-        footer: "Open the Enquiries tab of the dashboard to reply.",
+        footer: "Open the Inquiries tab of the dashboard to reply.",
       });
 
       return { ok: true, id: String(row?.["id"] ?? "") || null };

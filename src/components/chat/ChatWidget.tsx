@@ -42,7 +42,7 @@ export function ChatWidget() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        aria-label={open ? "Close chat" : "Chat with chambers"}
+        aria-label={open ? "Close chat" : "Chat with us"}
         aria-expanded={open}
         // Crimson rather than the wordmark's black: the launcher floats over
         // both the paper sections and the near-black bands, and on the latter a
@@ -60,7 +60,7 @@ export function ChatWidget() {
               {chat.status === "error"
                 ? "This widget is not connected yet."
                 : chat.status === "open"
-                  ? "We usually reply within a working day."
+                  ? "We usually reply within one business day."
                   : "Tell us who you are and what it concerns."}
             </p>
           </header>

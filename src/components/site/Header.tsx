@@ -1,22 +1,21 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Menu, Phone, X } from "lucide-react";
+import { Clock, Mail, Menu, X } from "lucide-react";
 
 import { useSiteSettings } from "./SiteSettingsContext";
-import { telHref } from "@/lib/site";
 import { Logo } from "./Logo";
 
 const NAV = [
   { to: "/", label: "Home" },
   { to: "/about", label: "The Firm" },
   { to: "/practice-areas", label: "Practice Areas" },
-  { to: "/people", label: "People" },
+  { to: "/people", label: "Attorneys" },
   { to: "/contact", label: "Contact" },
 ] as const;
 
 /**
- * Two bars: a slim ink strip carrying the number and the hours, and the
- * navigation on paper beneath it. The strip collapses on scroll, so the number
+ * Two bars: a slim ink strip carrying the email address and the hours, and the
+ * navigation on paper beneath it. The strip collapses on scroll, so the way in
  * is the first thing on the page and costs nothing once you are reading.
  *
  * The header is opaque from the first pixel. Every page opens on a pale ground
@@ -49,19 +48,16 @@ export function Header() {
       >
         <div className="mx-auto flex h-10 max-w-[92rem] items-center justify-between px-5 text-xs md:px-10">
           <a
-            href={telHref(settings.phone)}
+            href={`mailto:${settings.email}`}
             className="inline-flex items-center gap-2.5 transition-colors hover:text-accent-ink"
           >
-            <Phone size={13} strokeWidth={1.8} className="text-accent-ink" aria-hidden="true" />
-            <span className="font-medium tracking-wide">{settings.phone}</span>
+            <Mail size={13} strokeWidth={1.8} className="text-accent-ink" aria-hidden="true" />
+            <span className="font-medium tracking-wide">{settings.email}</span>
           </a>
-          <p className="hidden text-ink-foreground/60 sm:block">{settings.hours}</p>
-          <a
-            href={`mailto:${settings.email}`}
-            className="hidden transition-colors hover:text-accent-ink md:block"
-          >
-            {settings.email}
-          </a>
+          <p className="hidden items-center gap-2.5 text-ink-foreground/60 sm:inline-flex">
+            <Clock size={13} strokeWidth={1.8} aria-hidden="true" />
+            {settings.hours}
+          </p>
         </div>
       </div>
 
@@ -92,7 +88,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <Link
               to="/contact"
-              className="eyebrow hidden bg-primary px-6 py-3.5 text-primary-foreground transition-colors hover:bg-accent lg:inline-flex"
+              className="btn-sweep eyebrow hidden bg-primary px-6 py-3.5 text-primary-foreground lg:inline-flex"
             >
               Book a consultation
             </Link>

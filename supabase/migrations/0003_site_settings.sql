@@ -19,9 +19,9 @@ create extension if not exists pgcrypto;
 
 create table if not exists public.site_settings (
   id text primary key default 'default',
-  email text not null default 'chambers@magmalegal.com',
+  email text not null default 'contact@magmalegal.com',
   website text not null default 'www.magmalegal.com',
-  hours text not null default 'Monday to Friday, 08:30 to 18:00',
+  hours text not null default 'Monday to Friday, 8:30 a.m. to 6 p.m.',
   updated_at timestamptz not null default now(),
   constraint site_settings_single_row check (id = 'default')
 );

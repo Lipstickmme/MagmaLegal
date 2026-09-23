@@ -29,7 +29,7 @@ export function PageHero({
     <>
       <section className="relative border-b border-border bg-accent-wash pb-16 pt-32 md:pb-20 md:pt-44">
         <div className="relative mx-auto max-w-[92rem] px-5 md:px-10">
-          <p className="flex items-center gap-3 eyebrow text-muted-foreground">
+          <p className="enter flex items-center gap-3 eyebrow text-muted-foreground">
             <Link to="/" className="transition-colors hover:text-accent">
               Home
             </Link>
@@ -39,13 +39,21 @@ export function PageHero({
 
           <div className="mt-12 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
             <div>
-              <p className="eyebrow text-accent">{eyebrow}</p>
-              <h1 className="mt-6 max-w-3xl font-display text-[2.6rem] leading-[1.05] md:text-[4.25rem]">
+              <p className="enter eyebrow text-accent" style={{ animationDelay: "120ms" }}>
+                {eyebrow}
+              </p>
+              <h1
+                className="enter mt-6 max-w-3xl font-display text-[2.6rem] leading-[1.05] md:text-[4.25rem]"
+                style={{ animationDelay: "220ms" }}
+              >
                 {title}
               </h1>
             </div>
             {lead ? (
-              <p className="max-w-xl border-l-2 border-accent pl-6 text-lg leading-relaxed text-muted-foreground lg:pb-3">
+              <p
+                className="enter max-w-xl border-l-2 border-accent pl-6 text-lg leading-relaxed text-muted-foreground lg:pb-3"
+                style={{ animationDelay: "360ms" }}
+              >
                 {lead}
               </p>
             ) : null}
@@ -55,13 +63,15 @@ export function PageHero({
 
       {image ? (
         <div className="relative border-b border-border">
-          <img
-            src={image}
-            alt={imageAlt ?? ""}
-            width={1344}
-            height={576}
-            className="h-[16rem] w-full object-cover md:h-[26rem]"
-          />
+          <div className="overflow-hidden">
+            <img
+              src={image}
+              alt={imageAlt ?? ""}
+              width={1344}
+              height={576}
+              className="hero-settle h-[16rem] w-full object-cover md:h-[26rem]"
+            />
+          </div>
         </div>
       ) : null}
     </>

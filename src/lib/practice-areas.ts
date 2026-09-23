@@ -1,7 +1,7 @@
 /**
  * The firm's practice areas, in the order they are presented.
  *
- * One record, two readers: the home page prints the first six as cards using
+ * One record, two readers: the home page prints the first six as rows using
  * `n`, `title` and `blurb`, and /practice-areas prints all of them with `body`
  * and `work`. Adding an area here puts it on both, so there is nothing to keep
  * in step. `n` is stored rather than derived from the index because it is a
@@ -11,7 +11,7 @@ export type PracticeArea = {
   slug: string;
   n: string;
   title: string;
-  /** One line, for the card on the home page. */
+  /** One line, for the row on the home page. */
   blurb: string;
   /** Two or three sentences, for the practice areas page. */
   body: string;
@@ -21,18 +21,18 @@ export type PracticeArea = {
 
 export const PRACTICE_AREAS: PracticeArea[] = [
   {
-    slug: "corporate-commercial",
+    slug: "corporate-transactional",
     n: "01",
-    title: "Corporate & Commercial",
+    title: "Corporate & Transactional",
     blurb:
-      "Incorporation, shareholder arrangements, acquisitions and the agreements that hold them together.",
-    body: "We act for companies from incorporation through to sale: constitutional documents, shareholder and joint venture arrangements, financing, and the commercial contracts a business runs on. Where a deal needs diligence, we run it ourselves rather than sending a questionnaire.",
+      "Entity formation, ownership agreements, acquisitions and the contracts that hold them together.",
+    body: "We represent businesses from formation through sale: LLC and corporate structuring, operating and shareholder agreements, financings, and the commercial contracts a company runs on. When a deal needs due diligence, our attorneys do it themselves rather than sending a checklist.",
     work: [
-      "Company formation and restructuring",
-      "Shareholder and joint venture agreements",
-      "Mergers, acquisitions and disposals",
+      "Entity formation and restructuring",
+      "Operating, shareholder and buy-sell agreements",
+      "Mergers, acquisitions and divestitures",
       "Commercial contracts and distribution",
-      "Corporate governance and secretarial support",
+      "Corporate governance and board advisory",
     ],
   },
   {
@@ -40,71 +40,71 @@ export const PRACTICE_AREAS: PracticeArea[] = [
     n: "02",
     title: "Litigation & Dispute Resolution",
     blurb:
-      "Advocacy in court and arbitration, and the hard advice about whether to be there at all.",
-    body: "We appear in commercial disputes, debt recovery, injunctions and appeals, and we arbitrate and mediate where that resolves a matter faster. Every file opens with a written view of the merits, the exposure and the likely cost, because a claim worth settling is worth settling early.",
+      "Business disputes in state and federal court, and candid advice on whether to be there at all.",
+    body: "We litigate contract, partnership and business tort disputes in state and federal court, seek and oppose emergency relief, and arbitrate or mediate when that resolves a matter faster. Every case starts with a written assessment of the merits, the exposure and the likely cost, because a dispute worth settling is worth settling early.",
     work: [
-      "Commercial and contractual disputes",
-      "Injunctions and urgent applications",
-      "Debt recovery and enforcement",
+      "Commercial and contract litigation",
+      "Temporary restraining orders and injunctions",
+      "Collections and judgment enforcement",
       "Arbitration and mediation",
-      "Appeals and judicial review",
+      "Appeals",
     ],
   },
   {
-    slug: "real-estate-property",
+    slug: "real-estate",
     n: "03",
-    title: "Real Estate & Property",
-    blurb: "Title, leases, development and the searches that stop a purchase becoming a dispute.",
-    body: "We handle acquisitions and disposals, perfection of title, leases and tenancy arrangements, and development and construction documentation. Title work is done before the money moves, and we say so when a title cannot be made good.",
+    title: "Real Estate",
+    blurb: "Acquisitions, leasing and development, with the title work that keeps a closing clean.",
+    body: "We handle commercial acquisitions and sales, leasing for landlords and tenants, and development and construction agreements. Title and survey issues are resolved before closing, and we say so plainly when a problem cannot be cured.",
     work: [
-      "Sale, purchase and perfection of title",
-      "Leases, tenancies and service charge disputes",
+      "Purchase and sale transactions",
+      "Title review and title insurance",
+      "Commercial leasing",
       "Development and construction agreements",
-      "Mortgages and security over land",
-      "Land use, planning and compulsory acquisition",
+      "Zoning, land use and entitlements",
     ],
   },
   {
     slug: "energy-natural-resources",
     n: "04",
     title: "Energy & Natural Resources",
-    blurb: "Upstream and power transactions, host community arrangements and regulatory approvals.",
-    body: "We advise operators, service companies and investors on licensing, farm-ins and farm-outs, power purchase and supply arrangements, and the consents each of those depends on. Contentious work in the sector is run by the same lawyers who drafted the contract.",
+    blurb: "Oil and gas, renewables and power: leases, project agreements and permits.",
+    body: "We advise operators, developers, landowners and investors on oil and gas leases, mineral rights, renewable energy projects and power purchase agreements, together with the permits and approvals each depends on. When a project turns contentious, the attorneys who drafted the agreements handle the dispute.",
     work: [
-      "Licensing, assignments, farm-ins and farm-outs",
-      "Power purchase and off-take agreements",
-      "Oilfield and drilling services contracts",
-      "Environmental and host community compliance",
-      "Sector regulatory approvals and disputes",
+      "Oil and gas leases and mineral rights",
+      "Renewable energy project development",
+      "Power purchase agreements",
+      "Environmental permitting and compliance",
+      "Energy regulatory approvals and disputes",
     ],
   },
   {
-    slug: "employment-labour",
+    slug: "employment-labor",
     n: "05",
-    title: "Employment & Labour",
-    blurb: "Contracts, handbooks, disciplinaries and exits, handled before they reach a tribunal.",
-    body: "We draft the contracts and policies an employer is judged on, advise through disciplinary and redundancy processes, and defend claims when they come. For employees and executives we review terms, negotiate exits and pursue wrongful dismissal claims.",
+    title: "Employment & Labor",
+    blurb:
+      "Agreements, handbooks, investigations and separations, handled before they become lawsuits.",
+    body: "We draft the agreements and policies an employer is judged on, advise through investigations, discipline and reductions in force, and defend claims when they are filed. For executives we negotiate employment and separation agreements and review restrictive covenants.",
     work: [
-      "Employment contracts and staff handbooks",
-      "Disciplinary, grievance and redundancy process",
-      "Executive appointments and exit negotiation",
-      "Restraint of trade and confidentiality",
-      "Industrial relations and tribunal claims",
+      "Employment agreements and handbooks",
+      "Wage-and-hour compliance",
+      "Discrimination and harassment claims",
+      "Non-compete, non-solicitation and trade secrets",
+      "Executive compensation and separation",
     ],
   },
   {
     slug: "regulatory-compliance",
     n: "06",
     title: "Regulatory & Compliance",
-    blurb:
-      "Licensing, investigations, data protection and the paperwork a regulator will ask for first.",
-    body: "We obtain and maintain sector licences, build compliance programmes that a business can actually follow, and represent clients in regulatory investigations and enforcement. Where an exposure already exists, we quantify it before deciding what to disclose.",
+    blurb: "Licensing, investigations, privacy and the records a regulator will ask for first.",
+    body: "We obtain and maintain licenses, build compliance programs a business can actually follow, and represent clients in government investigations and enforcement actions. Where an exposure already exists, we assess it before deciding what to disclose.",
     work: [
-      "Licence applications and renewals",
-      "Anti-money-laundering and know-your-customer frameworks",
-      "Data protection and privacy compliance",
-      "Regulatory investigations and enforcement",
-      "Internal investigations and whistleblowing",
+      "Licensing and permits",
+      "Anti-money-laundering and know-your-customer programs",
+      "Data privacy compliance",
+      "Government investigations and enforcement",
+      "Internal investigations",
     ],
   },
   {
@@ -112,28 +112,28 @@ export const PRACTICE_AREAS: PracticeArea[] = [
     n: "07",
     title: "Intellectual Property & Technology",
     blurb:
-      "Trade marks, software and licensing agreements for businesses whose value is intangible.",
-    body: "We register and defend trade marks, draft software, SaaS and licensing agreements, and advise technology businesses on the terms they trade on. Infringement is met with the letter first and proceedings only where the letter fails.",
+      "Trademarks, copyrights and technology agreements for businesses whose value is intangible.",
+    body: "We register and enforce trademarks and copyrights, draft software, SaaS and licensing agreements, and advise technology companies on the terms they do business on. Infringement starts with a demand letter, and goes to court only when the letter does not work.",
     work: [
-      "Trade mark, design and copyright registration",
+      "Trademark and copyright registration",
       "Software, SaaS and licensing agreements",
-      "Technology transfer and development contracts",
-      "Infringement, passing off and enforcement",
-      "Platform terms and consumer compliance",
+      "Technology development and services contracts",
+      "Infringement and enforcement",
+      "Terms of service and privacy policies",
     ],
   },
   {
-    slug: "private-client-estates",
+    slug: "trusts-estates",
     n: "08",
-    title: "Private Client & Estates",
-    blurb: "Wills, probate, trusts and succession planning for families and family businesses.",
-    body: "We prepare wills and trusts, administer estates, and plan succession for owners whose business and family are the same balance sheet. Contentious probate is handled in-house, which is a reason to get the planning right.",
+    title: "Trusts & Estates",
+    blurb: "Wills, trusts, probate and succession planning for families and family businesses.",
+    body: "We prepare wills and trusts, administer estates and trusts, and plan succession for owners whose business and family share a balance sheet. Estate and trust disputes are handled in house, which is a good reason to get the planning right.",
     work: [
-      "Wills, codicils and estate planning",
-      "Probate and letters of administration",
-      "Trusts and family settlements",
-      "Succession planning for family businesses",
-      "Contentious probate and estate disputes",
+      "Wills and revocable trusts",
+      "Probate and estate administration",
+      "Trust administration",
+      "Business succession planning",
+      "Estate and trust litigation",
     ],
   },
 ];
