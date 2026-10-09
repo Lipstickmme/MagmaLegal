@@ -130,7 +130,7 @@ function About() {
           <Reveal delay={200} className="mt-16 flex flex-wrap items-center gap-6">
             <Link
               to="/contact"
-              className="btn-sweep group eyebrow inline-flex items-center gap-4 bg-primary px-8 py-4 text-primary-foreground"
+              className="btn-glass group eyebrow inline-flex items-center gap-4 bg-primary px-8 py-4 text-primary-foreground"
             >
               Book a consultation
               <ArrowUpRight

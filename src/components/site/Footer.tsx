@@ -60,10 +60,7 @@ export function Footer() {
               <Clock size={15} strokeWidth={1.5} aria-hidden="true" />
               {settings.hours}
             </p>
-            <Link
-              to="/contact"
-              className="eyebrow mt-8 inline-flex border border-ink-foreground/35 px-6 py-3 transition-colors duration-300 hover:border-accent-ink hover:text-accent-ink"
-            >
+            <Link to="/contact" className="btn-ghost eyebrow mt-8 inline-flex px-6 py-3">
               Book a consultation
             </Link>
           </div>

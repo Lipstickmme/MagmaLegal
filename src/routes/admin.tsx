@@ -43,7 +43,7 @@ function AdminPage() {
           <button
             type="button"
             onClick={() => void auth.signOut()}
-            className="eyebrow mt-8 border border-border px-6 py-3 transition-colors hover:border-accent hover:text-accent"
+            className="btn-ghost eyebrow mt-8 px-6 py-3"
           >
             Sign out
           </button>

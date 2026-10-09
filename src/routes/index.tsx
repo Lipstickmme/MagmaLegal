@@ -103,7 +103,7 @@ function Home() {
 
         <div className="relative mx-auto grid max-w-[92rem] gap-10 px-5 pb-16 md:px-10 md:pb-24 xl:grid-cols-[minmax(0,44rem)_1fr] xl:items-end xl:gap-14">
           <div
-            className="enter relative z-10 -mt-24 border-t-2 border-accent bg-background p-6 shadow-[0_32px_64px_-40px_rgb(0_0_0/0.5)] md:mt-[calc(-1*min(10.5vw,10rem))] md:max-w-3xl md:p-12 xl:max-w-none"
+            className="enter glass-panel relative z-10 -mt-24 border-t-2 border-accent p-6 md:mt-[calc(-1*min(10.5vw,10rem))] md:max-w-3xl md:p-12 xl:max-w-none"
             style={{ animationDelay: "250ms" }}
           >
             <p className="flex items-center gap-3 eyebrow text-accent">
@@ -123,7 +123,7 @@ function Home() {
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <Link
                 to="/contact"
-                className="btn-sweep group eyebrow inline-flex items-center gap-4 bg-primary px-8 py-4 text-primary-foreground"
+                className="btn-glass glass-intro group eyebrow inline-flex items-center gap-4 px-8 py-4"
               >
                 Book a consultation
                 <ArrowUpRight
@@ -134,7 +134,7 @@ function Home() {
               </Link>
               <Link
                 to="/practice-areas"
-                className="eyebrow inline-flex items-center gap-4 border border-foreground/25 px-8 py-4 transition-colors duration-300 hover:border-accent hover:text-accent"
+                className="btn-ghost eyebrow inline-flex items-center gap-4 px-8 py-4"
               >
                 Practice areas
               </Link>
@@ -328,7 +328,7 @@ function Home() {
             </a>
             <Link
               to="/contact"
-              className="group eyebrow inline-flex items-center gap-4 bg-accent-foreground px-8 py-4 text-accent-deep transition-colors duration-300 hover:bg-primary hover:text-primary-foreground"
+              className="btn-glass-light group eyebrow inline-flex items-center gap-4 px-8 py-4"
             >
               Book a consultation
               <ArrowUpRight

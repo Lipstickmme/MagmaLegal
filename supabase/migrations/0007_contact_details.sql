@@ -11,11 +11,11 @@
 begin;
 
 update public.site_settings
-   set email = 'contact@magmalegal.com'
+   set email = 'contact@magmalegalchambers.com'
  where email = 'frontdesk@meastroarchitecture.com';
 
 update public.site_settings
-   set website = 'www.magmalegal.com'
+   set website = 'www.magmalegalchambers.com'
  where website = 'www.meastroarchitecture.com';
 
 update public.site_settings
@@ -32,8 +32,8 @@ update public.site_settings
    set address = ''
  where address = '54-A Sager Dr, Rochester, NY 14607, United States';
 
-alter table public.site_settings alter column email set default 'contact@magmalegal.com';
-alter table public.site_settings alter column website set default 'www.magmalegal.com';
+alter table public.site_settings alter column email set default 'contact@magmalegalchambers.com';
+alter table public.site_settings alter column website set default 'www.magmalegalchambers.com';
 alter table public.site_settings alter column hours set default 'Monday to Friday, 8:30 a.m. to 6 p.m.';
 alter table public.site_settings alter column address set default '';
 alter table public.site_settings alter column offices set default '[]'::jsonb;

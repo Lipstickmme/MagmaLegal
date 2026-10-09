@@ -7,7 +7,7 @@
 // Reads the same variable names the app reads, in the same order. Pass them in
 // however you like:
 //
-//   RESEND_API_KEY=re_... MAIL_DOMAIN=magmalegal.com \
+//   RESEND_API_KEY=re_... MAIL_DOMAIN=magmalegalchambers.com \
 //     node scripts/check-resend.mjs you@gmail.com
 //
 // Or pull them straight out of the deployment, which is the version worth

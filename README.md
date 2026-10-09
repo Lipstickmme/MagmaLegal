@@ -69,17 +69,18 @@ at**, which is not necessarily the one last opened in the dashboard — open
 
 In the Supabase SQL editor, run in order:
 
-| File                                           | Needed for                                                  |
-| ---------------------------------------------- | ----------------------------------------------------------- |
-| `supabase/migrations/0001_init.sql`            | everything: admins, enquiries, bookings, chat               |
-| `supabase/migrations/0002_email.sql`           | optional — only to receive mail through the inbound webhook |
-| `supabase/migrations/0003_site_settings.sql`   | the contact details the Settings tab edits                  |
-| `supabase/migrations/0004_site_address.sql`    | an unused column; run it anyway, in order                   |
-| `supabase/migrations/0005_offices.sql`         | an unused column the schema report expects; run it          |
-| `supabase/migrations/0006_schema_report.sql`   | lets `/api/health` and `verify.sql` name anything missing   |
-| `supabase/migrations/0007_contact_details.sql` | a no-op on a fresh project; harmless to run                 |
+| File                                           | Needed for                                                       |
+| ---------------------------------------------- | ---------------------------------------------------------------- |
+| `supabase/migrations/0001_init.sql`            | everything: admins, enquiries, bookings, chat                    |
+| `supabase/migrations/0002_email.sql`           | optional — only to receive mail through the inbound webhook      |
+| `supabase/migrations/0003_site_settings.sql`   | the contact details the Settings tab edits                       |
+| `supabase/migrations/0004_site_address.sql`    | an unused column; run it anyway, in order                        |
+| `supabase/migrations/0005_offices.sql`         | an unused column the schema report expects; run it               |
+| `supabase/migrations/0006_schema_report.sql`   | lets `/api/health` and `verify.sql` name anything missing        |
+| `supabase/migrations/0007_contact_details.sql` | a no-op on a fresh project; harmless to run                      |
+| `supabase/migrations/0008_domain.sql`          | moves a row seeded with the old domain to magmalegalchambers.com |
 
-All seven are guarded, atomic and re-runnable: applying them twice is a no-op,
+All eight are guarded, atomic and re-runnable: applying them twice is a no-op,
 not an error, and an edit made from the dashboard survives a re-run.
 
 The transaction around each one matters more than it looks. A policy is made

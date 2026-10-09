@@ -47,7 +47,7 @@ export function ChatWidget() {
         // Crimson rather than the wordmark's black: the launcher floats over
         // both the paper sections and the near-black bands, and on the latter a
         // black square with a white glyph all but disappears.
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center bg-accent text-accent-foreground shadow-lg transition-colors hover:bg-primary hover:text-primary-foreground"
+        className="btn-glass-accent fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full"
       >
         {open ? <X size={20} strokeWidth={1.5} /> : <MessageSquare size={20} strokeWidth={1.5} />}
       </button>

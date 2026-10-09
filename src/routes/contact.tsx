@@ -235,11 +235,7 @@ function EnquiryForm() {
           Thank you, we have it. An attorney will reply within one business day, after a conflict
           check.
         </p>
-        <button
-          type="button"
-          onClick={form.reset}
-          className="eyebrow mt-8 border border-border px-6 py-3 transition-colors hover:border-accent hover:text-accent"
-        >
+        <button type="button" onClick={form.reset} className="btn-ghost eyebrow mt-8 px-6 py-3">
           Send another
         </button>
       </div>
@@ -343,7 +339,7 @@ function EnquiryForm() {
       <button
         type="submit"
         disabled={form.submitting}
-        className="btn-sweep eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground disabled:opacity-40"
+        className="btn-glass eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground disabled:opacity-40"
       >
         {form.submitting ? "Sending…" : "Send inquiry"}
         <ArrowUpRight size={16} strokeWidth={1.5} />
@@ -387,11 +383,7 @@ function BookingForm() {
         <p className="font-display text-3xl leading-snug">
           Booked in. We will email you to confirm the slot.
         </p>
-        <button
-          type="button"
-          onClick={form.reset}
-          className="eyebrow mt-8 border border-border px-6 py-3 transition-colors hover:border-accent hover:text-accent"
-        >
+        <button type="button" onClick={form.reset} className="btn-ghost eyebrow mt-8 px-6 py-3">
           Book another
         </button>
       </div>
@@ -512,7 +504,7 @@ function BookingForm() {
       <button
         type="submit"
         disabled={form.submitting}
-        className="btn-sweep eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground disabled:opacity-40"
+        className="btn-glass eyebrow inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground disabled:opacity-40"
       >
         {form.submitting ? "Booking…" : "Request booking"}
         <ArrowUpRight size={16} strokeWidth={1.5} />

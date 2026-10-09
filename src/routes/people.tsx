@@ -206,7 +206,7 @@ function People() {
             </p>
             <a
               href={`mailto:${settings.email}?subject=Associate%20application`}
-              className="btn-sweep group eyebrow mt-8 inline-flex items-center gap-4 bg-primary px-8 py-4 text-primary-foreground"
+              className="btn-glass group eyebrow mt-8 inline-flex items-center gap-4 bg-primary px-8 py-4 text-primary-foreground"
             >
               Apply by email
               <ArrowUpRight

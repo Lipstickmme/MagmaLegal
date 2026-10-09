@@ -70,7 +70,7 @@ async function load(env: Record<string, string | undefined>) {
   return import(`${MOD}?v=${bust++}`);
 }
 
-const DOMAIN = "magmalegal.com";
+const DOMAIN = "magmalegalchambers.com";
 
 // ---------------------------------------------------------------------------
 console.log("\n1. Address resolution from MAIL_DOMAIN alone");
@@ -187,7 +187,7 @@ console.log("\n6. A rejected send surfaces Resend's own message");
   nextStatus = 403;
   nextBody = {
     message:
-      "The magmalegal.com domain is not verified. Please add and verify your domain on https://resend.com/domains",
+      "The magmalegalchambers.com domain is not verified. Please add and verify your domain on https://resend.com/domains",
   };
   let msg = "";
   try {

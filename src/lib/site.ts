@@ -16,9 +16,9 @@
 export const SITE = {
   name: "Magma Legal Practitioners",
   shortName: "Magma",
-  domain: "magmalegal.com",
-  website: "www.magmalegal.com",
-  email: "contact@magmalegal.com",
+  domain: "magmalegalchambers.com",
+  website: "www.magmalegalchambers.com",
+  email: "contact@magmalegalchambers.com",
   hours: "Monday to Friday, 8:30 a.m. to 6 p.m.",
 } as const;
 

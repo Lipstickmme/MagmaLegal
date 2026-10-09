@@ -195,7 +195,7 @@ function PracticeAreas() {
           <Reveal delay={200}>
             <Link
               to="/contact"
-              className="btn-sweep group eyebrow mt-14 inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground"
+              className="btn-glass group eyebrow mt-14 inline-flex items-center gap-4 bg-primary px-9 py-4 text-primary-foreground"
             >
               Ask for a fee estimate
               <ArrowUpRight

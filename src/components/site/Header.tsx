@@ -24,12 +24,17 @@ const NAV = [
  */
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [open, setOpen] = useState(false);
   const settings = useSiteSettings();
   const pathname = useRouterState({ select: (state) => state.location.pathname });
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 24);
+      const room = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(room > 0 ? Math.min(1, window.scrollY / room) : 0);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -61,7 +66,20 @@ export function Header() {
         </div>
       </div>
 
-      <div className="border-b border-border bg-background/95 backdrop-blur-xl">
+      <div
+        className={`relative border-b backdrop-blur-2xl backdrop-saturate-150 transition-[background-color,box-shadow,border-color] duration-500 ${
+          scrolled
+            ? "border-border/70 bg-background/72 shadow-[0_12px_32px_-24px_rgb(0_0_0/0.45)]"
+            : "border-border bg-background/95"
+        }`}
+      >
+        {/* How far down the page you are, as a crimson hairline on the
+            header's lower edge. Transform only, so it never triggers layout. */}
+        <span
+          aria-hidden="true"
+          className="absolute inset-x-0 -bottom-px h-[2px] origin-left bg-gradient-to-r from-accent-deep via-accent to-accent-ink"
+          style={{ transform: `scaleX(${progress})` }}
+        />
         <div className="mx-auto flex h-20 max-w-[92rem] items-center justify-between px-5 md:px-10">
           <Link to="/" aria-label="Magma Legal Practitioners, home">
             <Logo tone="dark" variant="mark" />
@@ -88,7 +106,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <Link
               to="/contact"
-              className="btn-sweep eyebrow hidden bg-primary px-6 py-3.5 text-primary-foreground lg:inline-flex"
+              className="btn-glass eyebrow hidden bg-primary px-6 py-3.5 text-primary-foreground lg:inline-flex"
             >
               Book a consultation
             </Link>
@@ -124,7 +142,7 @@ export function Header() {
           ))}
           <Link
             to="/contact"
-            className="eyebrow mt-6 inline-flex justify-center bg-primary px-6 py-4 text-primary-foreground transition-colors hover:bg-accent"
+            className="btn-glass eyebrow mt-6 inline-flex justify-center px-6 py-4"
           >
             Book a consultation
           </Link>
