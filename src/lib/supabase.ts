@@ -34,8 +34,9 @@ export class SupabaseNotConfiguredError extends Error {
 }
 
 let client: SupabaseClient | undefined;
+let visitorClient: SupabaseClient | undefined;
 
-function build(): SupabaseClient {
+function build(storageKey?: string): SupabaseClient {
   const config = getPublicConfig();
   if (!config?.supabaseUrl || !config.supabaseAnonKey) throw new SupabaseNotConfiguredError();
 
@@ -44,7 +45,8 @@ function build(): SupabaseClient {
     auth: {
       persistSession: typeof window !== "undefined",
       autoRefreshToken: typeof window !== "undefined",
-      detectSessionInUrl: typeof window !== "undefined",
+      detectSessionInUrl: typeof window !== "undefined" && !storageKey,
+      ...(storageKey ? { storageKey } : {}),
     },
   });
 }
@@ -62,7 +64,23 @@ export const supabase = new Proxy({} as SupabaseClient, {
   },
 });
 
-/** Drops the memoised client — used when the config arrives after a first read. */
+/**
+ * The live chat's own client, with its own stored session.
+ *
+ * Sharing the staff client meant that signing in at /admin replaced the
+ * visitor's anonymous session in the same browser. The conversation the
+ * visitor had open then belonged to a different `auth.uid()`, and RLS refused
+ * every message in it. A separate storage key keeps the two identities apart.
+ */
+export const visitorSupabase = new Proxy({} as SupabaseClient, {
+  get(_target, prop, receiver) {
+    if (!visitorClient) visitorClient = build("magma-visitor-chat");
+    return Reflect.get(visitorClient, prop, receiver);
+  },
+});
+
+/** Drops the memoised clients — used when the config arrives after a first read. */
 export function resetSupabaseClient(): void {
   client = undefined;
+  visitorClient = undefined;
 }

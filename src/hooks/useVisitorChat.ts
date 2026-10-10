@@ -5,7 +5,7 @@ import type { ChatMessage } from "@/lib/database.types";
 import { submitForm } from "@/lib/api/forms";
 import { describeError } from "@/lib/readable-error";
 import { isSupabaseConfigured } from "@/lib/public-config";
-import { supabase } from "@/lib/supabase";
+import { visitorSupabase as supabase } from "@/lib/supabase";
 
 const STORAGE_KEY = "haven.chat.session";
 
