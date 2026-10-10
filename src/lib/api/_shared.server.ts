@@ -58,7 +58,7 @@ export const RESEND_WEBHOOK_SECRET = env(RESEND_WEBHOOK_SECRET_NAMES);
 export const MAIL_DOMAIN = env(MAIL_DOMAIN_NAMES) ?? "example.com";
 export const MAIL_FROM =
   env(["MAIL_FROM"]) ?? `Magma Legal Practitioners <no-reply@${MAIL_DOMAIN}>`;
-export const MAIL_REPLY_TO = env(["MAIL_REPLY_TO"]) ?? `hello@${MAIL_DOMAIN}`;
+export const MAIL_REPLY_TO = env(["MAIL_REPLY_TO"]) ?? `contact@${MAIL_DOMAIN}`;
 /** Where visitor notifications land. Never point this back at MAIL_DOMAIN's
  *  own inbound route, or mail loops through the webhook until quota runs out. */
 export const MAIL_NOTIFY_TO = env(["MAIL_NOTIFY_TO", "NOTIFY_TO", "STAFF_EMAIL"]) ?? MAIL_REPLY_TO;

@@ -150,7 +150,7 @@ In Vercel → **Settings → Environment Variables** (Production _and_ Preview).
 | `RESEND_WEBHOOK_SECRET`     | **server only**     | no       | `whsec_…` Svix signing secret for `/api/inbound-email`. Required only to receive mail.                                                 |
 | `MAIL_DOMAIN`               | server only         | no       | One domain drives every address below.                                                                                                 |
 | `MAIL_FROM`                 | server only         | no       | Defaults to `Magma Legal Practitioners <no-reply@$MAIL_DOMAIN>`.                                                                       |
-| `MAIL_REPLY_TO`             | server only         | no       | Defaults to `hello@$MAIL_DOMAIN`.                                                                                                      |
+| `MAIL_REPLY_TO`             | server only         | no       | Defaults to `contact@$MAIL_DOMAIN`.                                                                                                    |
 | `MAIL_NOTIFY_TO`            | server only         | no       | Where visitor notifications land. Defaults to `MAIL_REPLY_TO`.                                                                         |
 
 "Reaches the browser" means the value is delivered to the client at runtime by

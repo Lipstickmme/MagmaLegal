@@ -30,7 +30,7 @@ const webhookSecret = pick("RESEND_WEBHOOK_SECRET", "RESEND_SIGNING_SECRET");
 const domain = pick("MAIL_DOMAIN");
 const MAIL_DOMAIN = domain?.value ?? "example.com";
 const MAIL_FROM = pick("MAIL_FROM")?.value ?? `Magma Legal Practitioners <no-reply@${MAIL_DOMAIN}>`;
-const MAIL_REPLY_TO = pick("MAIL_REPLY_TO")?.value ?? `hello@${MAIL_DOMAIN}`;
+const MAIL_REPLY_TO = pick("MAIL_REPLY_TO")?.value ?? `contact@${MAIL_DOMAIN}`;
 const MAIL_NOTIFY_TO = pick("MAIL_NOTIFY_TO", "NOTIFY_TO", "STAFF_EMAIL")?.value ?? MAIL_REPLY_TO;
 
 /** A newline inside an address is a broken header, not just a bad address. */

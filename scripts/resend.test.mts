@@ -83,8 +83,8 @@ console.log("\n1. Address resolution from MAIL_DOMAIN alone");
     m.MAIL_FROM,
   );
   ok(
-    `MAIL_REPLY_TO defaults to hello@${DOMAIN}`,
-    m.MAIL_REPLY_TO === `hello@${DOMAIN}`,
+    `MAIL_REPLY_TO defaults to contact@${DOMAIN}`,
+    m.MAIL_REPLY_TO === `contact@${DOMAIN}`,
     m.MAIL_REPLY_TO,
   );
   ok(
