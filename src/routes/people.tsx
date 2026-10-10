@@ -7,6 +7,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { useSiteSettings } from "@/components/site/SiteSettingsContext";
 import { WordRise } from "@/components/site/WordRise";
+import { canonical } from "@/lib/site";
 
 export const Route = createFileRoute("/people")({
   head: () => ({
@@ -19,7 +20,9 @@ export const Route = createFileRoute("/people")({
       },
       { property: "og:title", content: "Attorneys. Magma Legal Practitioners" },
       { property: "og:description", content: "Who will be on your matter, and what they do." },
+      canonical("/people").meta,
     ],
+    links: [canonical("/people").link],
   }),
   component: People,
 });

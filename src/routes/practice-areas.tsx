@@ -6,6 +6,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { Reveal } from "@/components/site/Reveal";
 import { WordRise } from "@/components/site/WordRise";
 import { PRACTICE_AREAS } from "@/lib/practice-areas";
+import { canonical } from "@/lib/site";
 
 export const Route = createFileRoute("/practice-areas")({
   head: () => ({
@@ -21,7 +22,9 @@ export const Route = createFileRoute("/practice-areas")({
         property: "og:description",
         content: "Eight practice areas, handled by the attorneys who will argue the clause.",
       },
+      canonical("/practice-areas").meta,
     ],
+    links: [canonical("/practice-areas").link],
   }),
   component: PracticeAreas,
 });

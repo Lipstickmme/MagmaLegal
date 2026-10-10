@@ -249,7 +249,7 @@ the row or the table is missing, so the block never renders blank.
 
 1. Apply `supabase/migrations/0002_email.sql`.
 2. In Resend, add an inbound route for your domain and point it at
-   `https://<your-deployment>/api/inbound-email`.
+   `https://www.magmalegalchambers.com/api/inbound-email`.
 3. Copy the endpoint's `whsec_…` signing secret into `RESEND_WEBHOOK_SECRET`.
 
 The route verifies the Svix HMAC-SHA256 signature over the raw body before
@@ -319,7 +319,7 @@ cannot tell them apart. Work down the list; `/api/health` answers the last two.
    bounces. If Resend's webhook log shows no attempt at all for the time you
    sent, this is it.
 2. **No inbound route, or the wrong URL.** The route must point at
-   `https://<your-deployment>/api/inbound-email`.
+   `https://www.magmalegalchambers.com/api/inbound-email`.
 3. **The signature is being rejected.** Resend's log shows `401`, and the
    response body names the cause: most often `RESEND_WEBHOOK_SECRET` holding an
    API key rather than the `whsec_` signing secret from the inbound endpoint.
@@ -344,7 +344,7 @@ endpoint, bypassing Resend:
 
 ```bash
 vercel env pull .env.local
-node --env-file=.env.local scripts/test-inbound.mjs https://your-deployment.example.com
+node --env-file=.env.local scripts/test-inbound.mjs https://www.magmalegalchambers.com
 ```
 
 A `200` that then shows up in **/admin → Email** means the endpoint, the secret,

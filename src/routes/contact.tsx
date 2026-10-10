@@ -8,6 +8,7 @@ import { useSiteSettings } from "@/components/site/SiteSettingsContext";
 import { EmailText } from "@/components/site/EmailText";
 import { useFormSubmit } from "@/hooks/useFormSubmit";
 import type { SubmitFormInput } from "@/lib/api/forms";
+import { canonical } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -22,7 +23,9 @@ export const Route = createFileRoute("/contact")({
         property: "og:description",
         content: "Tell us what has happened and where it stands.",
       },
+      canonical("/contact").meta,
     ],
+    links: [canonical("/contact").link],
   }),
   component: Contact,
 });

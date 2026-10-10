@@ -10,7 +10,7 @@ import { useSiteSettings } from "@/components/site/SiteSettingsContext";
 import { EmailText } from "@/components/site/EmailText";
 import { WordRise } from "@/components/site/WordRise";
 import { PRACTICE_AREAS } from "@/lib/practice-areas";
-import { SITE } from "@/lib/site";
+import { SITE, canonical } from "@/lib/site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -26,7 +26,9 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Business counsel and courtroom advocacy, held to one standard.",
       },
+      canonical("/").meta,
     ],
+    links: [canonical("/").link],
   }),
   component: Home,
 });

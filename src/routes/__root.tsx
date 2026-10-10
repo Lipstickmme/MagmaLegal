@@ -14,6 +14,7 @@ import { type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { loadPublicConfig, setPublicConfig } from "../lib/public-config";
 import { loadSiteSettings } from "../lib/site-settings";
+import { SITE, absoluteUrl } from "../lib/site";
 import { SiteSettingsProvider } from "@/components/site/SiteSettingsContext";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
@@ -96,11 +97,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "author", content: "Magma Legal Practitioners" },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/link-card.png" },
+      { property: "og:site_name", content: SITE.name },
+      { property: "og:image", content: absoluteUrl("/link-card.png") },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "/link-card.png" },
+      { name: "twitter:image", content: absoluteUrl("/link-card.png") },
     ],
     links: [
       {

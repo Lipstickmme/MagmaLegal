@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // Send one correctly signed email.received delivery to the live endpoint.
 //
-//   RESEND_WEBHOOK_SECRET=whsec_... node scripts/test-inbound.mjs https://your-site.com
+//   RESEND_WEBHOOK_SECRET=whsec_... node scripts/test-inbound.mjs https://www.magmalegalchambers.com
 //
 // Or straight from the deployment, which is the version worth trusting:
 //
 //   vercel env pull .env.local
-//   node --env-file=.env.local scripts/test-inbound.mjs https://your-site.com
+//   node --env-file=.env.local scripts/test-inbound.mjs https://www.magmalegalchambers.com
 //
 // This is the decisive test. It bypasses Resend entirely and speaks to the
 // endpoint the way Resend would, so the answer separates two things that look
@@ -24,7 +24,7 @@ import { createHmac, randomUUID } from "node:crypto";
 
 const base = (process.argv[2] ?? "").replace(/\/+$/, "");
 if (!base) {
-  console.error("Usage: node scripts/test-inbound.mjs https://your-deployment.example.com");
+  console.error("Usage: node scripts/test-inbound.mjs https://www.magmalegalchambers.com");
   process.exit(2);
 }
 
